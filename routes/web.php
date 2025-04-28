@@ -10,6 +10,10 @@ Route::middleware(CheckAuthenticated::class)->group(function () {
     });
 });
 
+Route::fallback(function () {
+    return view('error.not-found');
+});
+
 // Auth Route
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
 Route::post('/register', [AuthController::class, 'register']);
