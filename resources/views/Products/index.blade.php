@@ -77,7 +77,7 @@
 
                                     <div class="mb-3 d-flex">
                                         <strong>Unit:</strong>
-                                        <p class="mb-0">{{ $product->unit }}</p>
+                                        <p class="mb-0">{{ $product->stock }}.{{ $product->unit }}</p>
                                     </div>
                                 </div>
                                 <div class="">
