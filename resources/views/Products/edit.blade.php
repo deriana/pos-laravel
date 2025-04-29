@@ -17,14 +17,6 @@
                     </div>
                 </div>
 
-                <!-- SKU -->
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="sku" name="sku" placeholder="SKU" value="{{ old('sku', $product->sku) }}" readonly>
-                        <label for="sku">SKU</label>
-                    </div>
-                </div>
-
                 <!-- Category -->
                 <div class="col-md-6">
                     <div class="form-floating">

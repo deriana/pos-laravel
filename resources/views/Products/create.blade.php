@@ -16,14 +16,6 @@
                     </div>
                 </div>
 
-                <!-- SKU (Auto-generated) -->
-                <div class="col-md-6">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="sku" name="sku" placeholder="SKU" value="AUTO" readonly>
-                        <label for="sku">SKU</label>
-                    </div>
-                </div>
-
                 <!-- Category -->
                 <div class="col-md-6">
                     <div class="form-floating">
