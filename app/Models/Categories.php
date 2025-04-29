@@ -10,7 +10,7 @@ class Categories extends Model
     protected $guarded = 'id';
     protected $fillable = ['name', 'description'];
 
-    public function products()
+    public function product()
     {
         return $this->HasMany(Products::class);
     }
