@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoriesController;
 use App\Http\Middleware\CheckAuthenticated;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,8 @@ Route::get('/products', function() {
 Route::fallback(function () {
     return view('error.not-found');
 });
+
+Route::resource('/categories', CategoriesController::class);
 
 // Auth Route
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
