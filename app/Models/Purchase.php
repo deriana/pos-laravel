@@ -22,6 +22,11 @@ class Purchase extends Model
         'note',
     ];
 
+
+    protected $casts = [
+        'sale_date' => 'datetime',
+    ];
+    
     public function products()
     {
         return $this->belongsToMany(Products::class)->withPivot('quantity', 'price', 'subtotal');

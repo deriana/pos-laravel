@@ -27,6 +27,8 @@ Route::middleware(CheckAuthenticated::class)->group(function () {
     Route::get('/change-email', [AuthController::class, 'showChangeEmailForm'])->name('auth.changeEmail');
     Route::post('/change-email', [AuthController::class, 'changeEmail'])->name('auth.changeEmailPost');
     Route::resource('/purchases', PurchaseController::class);
+    Route::get('purchases/{id}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.receipt');
+    Route::post('/purchase/{id}/pay-debt', [PurchaseController::class, 'payDebt'])->name('purchase.pay.debt');
 });
 
 

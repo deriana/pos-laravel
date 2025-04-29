@@ -8,6 +8,7 @@ use App\Models\Products;
 use App\Models\PurchaseItem;
 use App\Models\AccountsPayable;
 use App\Models\PurchasePayment;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +16,35 @@ class PurchaseController extends Controller
 {
     public function index()
     {
-        return view('purchases.index');
+        $purchases = Purchase::with([
+            'supplier',
+            'purchaseItems.product',
+            'payments',
+            'accountsPayable'
+        ])
+            ->when(request('status'), function ($query, $status) {
+                $query->whereHas('accountsPayable', function ($q) use ($status) {
+                    $q->where('status', $status);
+                });
+            })
+            ->latest()
+            ->get();
+
+        return view('purchases.index', compact('purchases'));
     }
+
+
+    public function showReceipt($id)
+    {
+        $purchase = Purchase::with(['supplier', 'purchaseItems.product', 'payments'])->findOrFail($id);
+
+        // Membuat instance PDF
+        $pdf = app(PDF::class)->loadView('purchases.receipt', compact('purchase'));
+
+        // Kembalikan hasil sebagai file PDF
+        return $pdf->download('struk_pembelian_' . $purchase->invoice_number . '.pdf');
+    }
+
 
     public function create()
     {
@@ -116,7 +144,7 @@ class PurchaseController extends Controller
             'payment_date' => $request->input('payment_date', now()),
             'payment_method' => $request->input('payment_method', 'cash'),
             'note' => $request->input('note'),
-        ]);        
+        ]);
 
         if ($request->payment_status !== 'paid') {
             AccountsPayable::create([
@@ -143,5 +171,43 @@ class PurchaseController extends Controller
 
         $lastInvoiceNumber = $latestInvoice ? (int)substr($latestInvoice->invoice_number, -3) : 0;
         return sprintf('INV-%s-%03d', $date, $lastInvoiceNumber + 1);
+    }
+
+    public function payDebt(Request $request, $id)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:0.01',
+            'payment_method' => 'required|in:cash,credit',
+            'payment_date' => 'required|date',
+        ]);
+
+        $account = AccountsPayable::findOrFail($id);
+        $purchase = $account->purchase;
+
+        // Tambah pembayaran ke tabel purchase_payments
+        PurchasePayment::create([
+            'purchase_id' => $purchase->id,
+            'amount' => $request->amount,
+            'payment_date' => $request->payment_date,
+            'payment_method' => $request->payment_method,
+            'note' => 'Pembayaran hutang',
+        ]);
+
+        // Update jumlah yang sudah dibayar
+        $account->amount_paid += $request->amount;
+
+        // Tentukan status
+        if ($account->amount_paid >= $account->amount_due) {
+            $account->status = 'paid';
+            $purchase->payment_status = 'paid';
+        } elseif ($account->amount_paid > 0) {
+            $account->status = 'partial';
+            $purchase->payment_status = 'partial';
+        }
+
+        $account->save();
+        $purchase->save();
+
+        return redirect()->back()->with('success', 'Pembayaran hutang berhasil dicatat.');
     }
 }
