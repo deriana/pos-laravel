@@ -4,10 +4,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Middleware\CheckAuthenticated;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(CheckAuthenticated::class)->group(function () {
-    Route::get('/', function () {
-        return view('Dashboard.index');
-    });
+// Route::middleware(CheckAuthenticated::class)->group(function () {
+//     Route::get('/', function () {
+//         return view('Dashboard.index');
+//     });
+// });
+
+Route::get('/', function () {
+    return view('Dashboard.index');
 });
 
 Route::fallback(function () {

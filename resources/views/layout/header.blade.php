@@ -152,6 +152,16 @@
                     </li>
 
                     <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Products</span>
+                    </li>
+                    <li class="menu-item ">
+                        <a href="index.html" class="menu-link">
+                            <i class="menu-icon tf-icons bx bxl-product-hunt"></i>
+                            <div data-i18n="Analytics">Products</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">Pages</span>
                     </li>
                     <li class="menu-item">
@@ -292,13 +302,13 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                      <form action="{{ route('logout') }}" method="POST">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item" style="cursor: pointer; background: none; border: none;">
-                                            <i class="bx bx-power-off me-2"></i>
-                                            <span class="align-middle">Log Out</span>
-                                        </button>
-                                    </form>                                    
+                                        <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Are you sure you want to log out?');">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item" style="cursor: pointer; background: none; border: none;">
+                                                <i class="bx bx-power-off me-2"></i>
+                                                <span class="align-middle">Log Out</span>
+                                            </button>
+                                        </form>                                        
                                     </li>
                                 </ul>
                             </li>
