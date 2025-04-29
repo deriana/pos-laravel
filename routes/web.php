@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Middleware\CheckAuthenticated;
 use Illuminate\Support\Facades\Route;
 
@@ -15,14 +17,13 @@ Route::get('/', function () {
     return view('Dashboard.index');
 });
 
-Route::get('/products', function() {
-    return view('product.index');
-});
+Route::resource('/products', ProductsController::class);
 
 Route::fallback(function () {
     return view('error.not-found');
 });
 
+Route::get('storage/images/{filename}', [ImageController::class, 'showImage']);
 Route::resource('/categories', CategoriesController::class);
 
 // Auth Route
