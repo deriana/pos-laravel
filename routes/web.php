@@ -14,6 +14,10 @@ Route::get('/', function () {
     return view('Dashboard.index');
 });
 
+Route::get('/products', function() {
+    return view('product.index');
+});
+
 Route::fallback(function () {
     return view('error.not-found');
 });
