@@ -61,7 +61,7 @@ class PurchaseController extends Controller
             'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.price' => 'required|numeric|min:0',
-            'discount' => 'nullable|numeric|min:0|max:100', // Dalam persen
+            'discount' => 'nullable|numeric|min:0|max:100',
             'amount_paid' => 'nullable|numeric|min:0',
             'payment_method' => 'nullable|in:cash,credit',
             'payment_date' => 'nullable|date',

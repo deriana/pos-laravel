@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('accounts_reveivable', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('purchase_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 15,2);
             $table->enum('payment_method', ['cash', 'credit']);
             $table->text('note')->nullable();
