@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Warung Sunda</title>
 
@@ -276,8 +277,8 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                        <img src="{{ asset('img/avatars/' . session('selectedAvatar', '1.png')) }}" alt
-                                                            class="w-px-70 h-px-70 rounded-circle" />
+                                                        <img src="{{ asset('img/avatars/' . session('selectedAvatar', '1.png')) }}"
+                                                            alt class="w-px-70 h-px-70 rounded-circle" />
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
@@ -302,13 +303,15 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <form action="{{ route('logout') }}" method="POST" onsubmit="return confirm('Are you sure you want to log out?');">
+                                        <form action="{{ route('logout') }}" method="POST"
+                                            onsubmit="return confirm('Are you sure you want to log out?');">
                                             @csrf
-                                            <button type="submit" class="dropdown-item" style="cursor: pointer; background: none; border: none;">
+                                            <button type="submit" class="dropdown-item"
+                                                style="cursor: pointer; background: none; border: none;">
                                                 <i class="bx bx-power-off me-2"></i>
                                                 <span class="align-middle">Log Out</span>
                                             </button>
-                                        </form>                                        
+                                        </form>
                                     </li>
                                 </ul>
                             </li>

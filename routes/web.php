@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductsController;
@@ -31,6 +32,7 @@ Route::middleware(CheckAuthenticated::class)->group(function () {
     Route::resource('/sales', SaleController::class);
     Route::get('purchases/{id}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.receipt');
     Route::post('/purchase/{id}/pay-debt', [PurchaseController::class, 'payDebt'])->name('purchase.pay.debt');
+    Route::post('/checkout', [CartController::class, 'store'])->name('cart.store');
 });
 
 
