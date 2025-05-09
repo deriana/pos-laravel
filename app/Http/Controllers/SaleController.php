@@ -13,6 +13,26 @@ use Illuminate\Support\Facades\Auth;
 
 class SaleController extends Controller
 {
+
+    public function index()
+    {
+        $purchases = Sale::with([
+            'customer',
+            // 'purchaseItems.product',
+            'items',
+            'payments'
+        ])
+            ->when(request('status'), function ($query, $status) {
+                $query->whereHas('accountsPayable', function ($q) use ($status) {
+                    $q->where('status', $status);
+                });
+            })
+            ->latest()
+            ->get();
+
+        return view('sales.index', compact('purchases'));
+    }
+
     public function create()
     {
         $customers = Customer::all();
@@ -32,14 +52,22 @@ class SaleController extends Controller
             'amount_paid' => 'nullable|numeric|min:0',
             'payment_method' => 'nullable|in:cash,transfer',
             'payment_date' => 'nullable|date',
+
+            // Customer field
+            'name' => 'required',
+            'phone_number' => 'required',
+            'email' => 'nullable',
+            'address' => 'required',
         ]);
-    
+
+        // Customer
+
         $customerId = $request->customer_id;
         $userId = Auth::id();
         $products = $request->input('products');
         $total = 0;
         $subtotalItems = [];
-    
+
         foreach ($products as $product) {
             $subtotal = $product['quantity'] * $product['price'];
             $total += $subtotal;
@@ -50,22 +78,22 @@ class SaleController extends Controller
                 'subtotal' => $subtotal,
             ];
         }
-    
+
         $discountPercent = $request->input('discount', 0);
         $discount = ($discountPercent / 100) * $total;
-    
+
         $tax = 0.11 * ($total - $discount); // PPN 11%
         $grandTotal = ($total - $discount) + $tax;
-    
+
         $invoiceNumber = $this->generateInvoiceNumber(); // Buat method ini sesuai kebutuhan
         $amountPaid = $request->input('amount_paid', 0);
-    
-        $paymentStatus = match(true) {
+
+        $paymentStatus = match (true) {
             $amountPaid >= $grandTotal => 'paid',
             $amountPaid > 0 => 'partial',
             default => 'unpaid',
         };
-    
+
         $sale = Sale::create([
             'customer_id' => $customerId,
             'user_id' => $userId,
@@ -78,7 +106,7 @@ class SaleController extends Controller
             'payment_status' => $paymentStatus,
             'note' => $request->note,
         ]);
-    
+
         foreach ($subtotalItems as $item) {
             SaleItem::create([
                 'sale_id' => $sale->id,
@@ -87,14 +115,14 @@ class SaleController extends Controller
                 'price' => $item['price'],
                 'sub_total' => $item['subtotal'],
             ]);
-    
+
             $product = Products::find($item['product_id']);
             if ($product) {
                 $product->stock -= $item['quantity']; // Kurangi stok karena dijual
                 $product->save();
             }
         }
-    
+
         // Simpan pembayaran (jika ada)
         if ($amountPaid > 0) {
             SalePayment::create([
@@ -105,20 +133,17 @@ class SaleController extends Controller
                 'note' => $request->note,
             ]);
         }
-    
+
         // Simpan piutang jika belum lunas
-        // if ($paymentStatus !== 'paid') {
-        //     AccountsReceivable::create([
-        //         'customer_id' => $customerId,
-        //         'sale_id' => $sale->id,
-        //         'amount_due' => $grandTotal,
-        //         'amount_paid' => $paymentStatus === 'partial' ? $amountPaid : 0,
-        //         'due_date' => now()->addDays(30), // default 30 hari jatuh tempo
-        //         'payment_method' => $request->input('payment_method', 'cash'),
-        //         'status' => $paymentStatus,
-        //     ]);
-        // }
-    
+        if ($paymentStatus !== 'paid') {
+            AccountsReceivable::create([
+                'sale_id' => $sale->id,
+                'amount' => $grandTotal,
+                'payment_method' => $request->input('payment_method', 'cash'),
+                'note' => $request->note,
+            ]);
+        }
+
         return redirect()->route('sales.index')->with('success', 'Transaksi penjualan berhasil dibuat!');
     }
 

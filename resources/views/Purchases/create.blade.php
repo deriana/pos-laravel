@@ -26,7 +26,7 @@
                             <option value="">Pilih Produk</option>
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}">{{ $product->name }} - Rp.
-                                    {{ number_format($product->purchase_price, 2) }}</option>
+                                    {{ number_format($product->purchase_price, 2) }} - {{ $product->stock }}</option>
                             @endforeach
                         </select>
                         <input type="number" name="products[0][quantity]" class="form-control mt-2 quantity"

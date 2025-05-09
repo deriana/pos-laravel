@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('accounts_reveivable', function (Blueprint $table) {
+        Schema::create('accounts_receivable', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 15,2);

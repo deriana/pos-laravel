@@ -3,7 +3,7 @@
 @section('content')
     <div class="content-wrapper">
         <div class="container">
-            <h2 class="mb-4">Laporan Transaksi Pembelian</h2>
+            <h2 class="mb-4">Laporan Transaksi Penjualan</h2>
 
             {{-- Filter Status --}}
             <form method="GET" class="mb-4">
@@ -21,20 +21,20 @@
             </form>
 
             <div class="row">
-                @foreach ($purchases as $purchase)
+                @foreach ($purchases as $sale)
                     <div class="col-md-6">
                         <div class="card mb-4">
                             <div class="card-header bg-info text-white">
-                                <strong>Invoice: {{ $purchase->invoice_number }}</strong> - {{ $purchase->supplier->name }}
+                                <strong>Invoice: {{ $sale->invoice_number }}</strong> - 
+                                {{ $sale->customer->name ?? 'Pelanggan Tidak Diketahui' }}
                             </div>
                             <div class="card-body mt-4">
-                                <p><strong>Tanggal:</strong> {{ $purchase->sale_date->format('d M Y') }}</p>
-                                <p><strong>Total:</strong> Rp{{ number_format($purchase->total, 0, ',', '.') }}</p>
-                                <p><strong>Diskon:</strong> Rp{{ number_format($purchase->discount, 0, ',', '.') }}</p>
-                                <p><strong>PPN (11%):</strong> Rp{{ number_format($purchase->tax, 0, ',', '.') }}</p>
-                                <p><strong>Grand Total:</strong> Rp{{ number_format($purchase->grand_total, 0, ',', '.') }}
-                                </p>
-                                <p><strong>Status Pembayaran:</strong> {{ strtoupper($purchase->payment_status) }}</p>
+                                <p><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($sale->sale_date)->format('d M Y') }}</p>
+                                <p><strong>Total:</strong> Rp{{ number_format($sale->total, 0, ',', '.') }}</p>
+                                <p><strong>Diskon:</strong> Rp{{ number_format($sale->discount, 0, ',', '.') }}</p>
+                                <p><strong>PPN (11%):</strong> Rp{{ number_format($sale->tax, 0, ',', '.') }}</p>
+                                <p><strong>Grand Total:</strong> Rp{{ number_format($sale->grand_total, 0, ',', '.') }}</p>
+                                <p><strong>Status Pembayaran:</strong> {{ strtoupper($sale->payment_status) }}</p>
 
                                 {{-- Detail Item --}}
                                 <h5>Detail Item:</h5>
@@ -48,7 +48,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($purchase->purchaseItems as $item)
+                                        @foreach ($sale->items as $item)
                                             <tr>
                                                 <td>{{ $item->product->name ?? 'Produk Terhapus' }}</td>
                                                 <td>{{ $item->quantity }}</td>
@@ -71,9 +71,9 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @forelse ($purchase->payments as $payment)
+                                        @forelse ($sale->payments as $payment)
                                             <tr>
-                                                <td>{{ $payment->payment_date->format('d M Y') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
                                                 <td>{{ ucfirst($payment->payment_method) }}</td>
                                                 <td>Rp{{ number_format($payment->amount, 0, ',', '.') }}</td>
                                                 <td>{{ $payment->note ?? '-' }}</td>
@@ -86,17 +86,17 @@
                                     </tbody>
                                 </table>
 
-                                {{-- Piutang / Hutang --}}
-                                @if ($purchase->accountsPayable->isNotEmpty())
+                                {{-- Piutang (Jika Ada) --}}
+                                @if (method_exists($sale, 'accountsPayable') && $sale->accountsPayable->isNotEmpty())
                                     <h5 class="mt-4">Piutang / Hutang:</h5>
-                                    @foreach ($purchase->accountsPayable as $account)
+                                    @foreach ($sale->accountsPayable as $account)
                                         <table class="table table-striped">
                                             <tr>
                                                 <th>Jatuh Tempo</th>
                                                 <td>{{ \Carbon\Carbon::parse($account->due_date)->format('d M Y') }}</td>
                                             </tr>
                                             <tr>
-                                                <th>Total Hutang</th>
+                                                <th>Total Piutang</th>
                                                 <td>Rp{{ number_format($account->amount_due, 0, ',', '.') }}</td>
                                             </tr>
                                             <tr>
@@ -105,87 +105,15 @@
                                             </tr>
                                             <tr>
                                                 <th>Status</th>
-                                                <td>
-                                                    {{ ucfirst($account->status) }}
-                                                    @if ($account->status !== 'paid')
-                                                        <div class="mt-2">
-                                                            <!-- Tombol untuk buka modal -->
-                                                            <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                                                data-bs-target="#payDebtModal{{ $account->id }}">
-                                                                Bayar Hutang
-                                                            </button>
-
-                                                            <!-- Modal -->
-                                                            <div class="modal fade" id="payDebtModal{{ $account->id }}"
-                                                                tabindex="-1"
-                                                                aria-labelledby="payDebtModalLabel{{ $account->id }}"
-                                                                aria-hidden="true">
-                                                                <div class="modal-dialog">
-                                                                    <form method="POST"
-                                                                        action="{{ route('purchase.pay.debt', $account->id) }}">
-                                                                        @csrf
-                                                                        <div class="modal-content">
-                                                                            <div class="modal-header">
-                                                                                <h5 class="modal-title">Bayar Hutang</h5>
-                                                                                <button type="button" class="btn-close"
-                                                                                    data-bs-dismiss="modal"></button>
-                                                                            </div>
-                                                                            <div class="modal-body">
-                                                                                <div class="mb-3">
-                                                                                    <label for="amount"
-                                                                                        class="form-label">Jumlah
-                                                                                        Bayar</label>
-                                                                                    <input type="number" name="amount"
-                                                                                        class="form-control" required
-                                                                                        min="1" step="0.01">
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label for="payment_method"
-                                                                                        class="form-label">Metode
-                                                                                        Pembayaran</label>
-                                                                                    <select name="payment_method"
-                                                                                        class="form-control">
-                                                                                        <option value="cash">Cash</option>
-                                                                                        <option value="credit">Credit
-                                                                                        </option>
-                                                                                    </select>
-                                                                                </div>
-                                                                                <div class="mb-3">
-                                                                                    <label for="payment_date"
-                                                                                        class="form-label">Tanggal
-                                                                                        Bayar</label>
-                                                                                    <input type="date"
-                                                                                        name="payment_date"
-                                                                                        class="form-control"
-                                                                                        value="{{ now()->format('Y-m-d') }}">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <button type="submit"
-                                                                                    class="btn btn-primary">Bayar</button>
-                                                                                <button type="button"
-                                                                                    class="btn btn-secondary"
-                                                                                    data-bs-dismiss="modal">Batal</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    @endif
-
-                                                </td>
+                                                <td>{{ ucfirst($account->status) }}</td>
                                             </tr>
                                         </table>
                                     @endforeach
-                                @else
-                                    <p>Tidak ada piutang atau hutang untuk transaksi ini.</p>
                                 @endif
 
-                                <div class="text-center mt-4">
-                                    <a href="{{ route('purchases.receipt', $purchase->id) }}" class="btn btn-primary">Unduh
-                                        Struk (PDF)</a>
-                                </div>
+                                {{-- <div class="text-center mt-4">
+                                    <a href="{{ route('sales.receipt', $sale->id) }}" class="btn btn-primary">Unduh Struk (PDF)</a>
+                                </div> --}}
                             </div>
                         </div>
                     </div>

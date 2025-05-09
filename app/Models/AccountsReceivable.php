@@ -11,7 +11,7 @@ class AccountsReceivable extends Model
 
     public $timestamps = false;
 
-    protected $table = 'accounts_reveivable'; 
+    protected $table = 'accounts_receivable'; 
 
     protected $fillable = ['sale_id', 'amount', 'payment_method', 'note'];
 }

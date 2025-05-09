@@ -232,7 +232,6 @@ class AuthController extends Controller
         return view('auth.edit-profile', compact('fileNames', 'selectedAvatar'));
     }
 
-
     public function updateProfile(Request $request)
     {
         $selectedAvatar = $request->input('avatar');
