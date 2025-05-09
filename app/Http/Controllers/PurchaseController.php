@@ -56,7 +56,13 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
+            // Validasi untuk supplier lama atau data supplier baru
+            'supplier_id' => 'nullable|exists:suppliers,id',
+            'supplier.name' => 'required_without:supplier_id|string|max:255',
+            'supplier.email' => 'nullable|string|',
+            'supplier.phone_number' => 'nullable|string|max:20',
+            'supplier.address' => 'nullable|string|max:255',
+
             'products' => 'required|array',
             'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1',
@@ -65,9 +71,22 @@ class PurchaseController extends Controller
             'amount_paid' => 'nullable|numeric|min:0',
             'payment_method' => 'nullable|in:cash,credit',
             'payment_date' => 'nullable|date',
+            'note' => 'nullable|string|max:255',
         ]);
 
-        $supplierId = $request->supplier_id;
+        // Buat supplier baru jika tidak ada supplier_id
+        if ($request->filled('supplier_id')) {
+            $supplierId = $request->supplier_id;
+        } else {
+            $supplier = Supplier::create([
+                'name' => $request->input('supplier.name'),
+                'email' => $request->input('supplier.email'),
+                'phone_number' => $request->input('supplier.phone_number'),
+                'address' => $request->input('supplier.address'),
+            ]);
+            $supplierId = $supplier->id;
+        }
+
         $userId = Auth::id();
         $products = $request->input('products');
         $total = 0;
@@ -84,28 +103,19 @@ class PurchaseController extends Controller
             ];
         }
 
-        // Hitung diskon (dalam persen)
         $discountPercent = $request->input('discount', 0);
         $discount = ($discountPercent / 100) * $total;
-
-        // Pajak (PPN 11%) dihitung dari total setelah diskon
         $tax = 0.11 * ($total - $discount);
-
-        // Hitung grand total
         $grandTotal = ($total - $discount) + $tax;
-
         $invoiceNumber = $this->generateInvoiceNumber();
-
         $amountPaid = $request->input('amount_paid', 0);
 
-        // Tentukan status pembayaran otomatis
-        if ($amountPaid >= $grandTotal) {
-            $paymentStatus = 'paid';
-        } elseif ($amountPaid > 0 && $amountPaid < $grandTotal) {
-            $paymentStatus = 'partial';
-        } else {
-            $paymentStatus = 'unpaid';
-        }
+        // Tentukan status pembayaran
+        $paymentStatus = match (true) {
+            $amountPaid >= $grandTotal => 'paid',
+            $amountPaid > 0 => 'partial',
+            default => 'unpaid',
+        };
 
         $purchase = Purchase::create([
             'supplier_id' => $supplierId,
@@ -117,7 +127,7 @@ class PurchaseController extends Controller
             'tax' => $tax,
             'grand_total' => $grandTotal,
             'payment_status' => $paymentStatus,
-            'note' => $request->note,
+            'note' => $request->input('note'),
         ]);
 
         foreach ($subtotalItems as $item) {
@@ -136,8 +146,6 @@ class PurchaseController extends Controller
             }
         }
 
-        $amountPaid = $request->input('amount_paid', 0);
-
         PurchasePayment::create([
             'purchase_id' => $purchase->id,
             'amount' => $amountPaid,
@@ -146,12 +154,12 @@ class PurchaseController extends Controller
             'note' => $request->input('note'),
         ]);
 
-        if ($request->payment_status !== 'paid') {
+        if ($paymentStatus !== 'paid') {
             AccountsPayable::create([
                 'supplier_id' => $supplierId,
                 'purchase_id' => $purchase->id,
                 'amount_due' => $grandTotal,
-                'amount_paid' => $request->payment_status === 'partial' ? $request->input('amount_paid', 0) : 0,
+                'amount_paid' => $paymentStatus === 'partial' ? $amountPaid : 0,
                 'due_date' => now()->addDays(30),
                 'payment_method' => $request->input('payment_method', 'cash'),
                 'status' => $paymentStatus,
@@ -160,6 +168,7 @@ class PurchaseController extends Controller
 
         return redirect()->route('purchases.index')->with('success', 'Transaksi pembelian berhasil dibuat!');
     }
+
 
 
     private function generateInvoiceNumber()

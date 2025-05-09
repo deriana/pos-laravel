@@ -15,6 +15,7 @@ class PurchasePayment extends Model
     protected $casts = [
         'payment_date' => 'datetime',
     ];
+    public $timestamps = false; 
     public function purchase()
     {
         return $this->belongsTo(Purchase::class);

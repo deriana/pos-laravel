@@ -15,6 +15,8 @@ class AccountsPayable extends Model
         'supplier_id', 'purchase_id', 'amount_due', 'amount_paid', 'due_date', 'payment_method', 'status',
     ];
 
+    public $timestamps = false; 
+
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);
