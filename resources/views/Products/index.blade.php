@@ -275,7 +275,7 @@
                     </button>
                 </div>
             </div>
-        `;
+            `;
                 total += item.qty * parseFloat(item.price);
             });
             document.getElementById('cartItems').innerHTML = cartItems;
@@ -297,6 +297,7 @@
             });
 
             document.getElementById('checkoutBtn').addEventListener('click', function() {
+                localStorage.removeItem('cart')
                 fetch('/checkout', {
                         method: 'POST',
                         headers: {
@@ -319,7 +320,9 @@
                         console.error('Error:', error);
                         alert('Terjadi kesalahan saat checkout.');
                     });
-            });
+            }
+        );
+
         }
 
         // Fungsi untuk menyimpan cart ke localStorage

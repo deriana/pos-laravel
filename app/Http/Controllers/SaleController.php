@@ -30,11 +30,13 @@ class SaleController extends Controller
             ->latest()
             ->get();
 
+
         return view('sales.index', compact('purchases'));
     }
 
     public function create()
     {
+        dd(session('checkout_cart'));
         $customers = Customer::all();
         $products = Products::all();
         return view('sales.create', compact('customers', 'products'));

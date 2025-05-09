@@ -13,6 +13,6 @@ class CartController extends Controller
         // Simpan ke session
         session(['checkout_cart' => $cart]);
 
-        return redirect()->route('sales.index');
+        return redirect()->route('sales.create');
     }
 }
