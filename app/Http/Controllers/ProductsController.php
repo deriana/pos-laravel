@@ -78,7 +78,7 @@ class ProductsController extends Controller
             'unit' => $request->unit,
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
+        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
     }
 
 
@@ -136,7 +136,8 @@ class ProductsController extends Controller
             'unit' => $request->unit,
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
+        // Contoh di store() atau update() method
+        return redirect()->route('products.index')->with('success', 'Product has been successfully added/updated.');
     }
 
 

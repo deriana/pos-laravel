@@ -32,6 +32,24 @@
 
 <!-- Core JS -->
 <!-- build:js assets/vendor/js/core.js -->
+<script>
+    document.getElementById('logout-button').addEventListener('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You will be logged out from this session.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, log me out!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('logout-form').submit();
+            }
+        });
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('vendor') }}/libs/jquery/jquery.js"></script>
 <script src="{{ asset('vendor') }}/libs/popper/popper.js"></script>

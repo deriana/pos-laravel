@@ -303,15 +303,14 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <form action="{{ route('logout') }}" method="POST"
-                                            onsubmit="return confirm('Are you sure you want to log out?');">
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             @csrf
-                                            <button type="submit" class="dropdown-item"
-                                                style="cursor: pointer; background: none; border: none;">
-                                                <i class="bx bx-power-off me-2"></i>
-                                                <span class="align-middle">Log Out</span>
-                                            </button>
                                         </form>
+                                        
+                                        <a href="#" class="dropdown-item" id="logout-button">
+                                            <i class="bx bx-power-off me-2"></i>
+                                            <span class="align-middle">Log Out</span>
+                                        </a>                                        
                                     </li>
                                 </ul>
                             </li>

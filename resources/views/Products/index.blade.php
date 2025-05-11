@@ -17,13 +17,24 @@
             <h1>Products</h1>
             <a href="{{ route('products.create') }}" class="btn btn-primary">+ Create Product</a>
         </div>
-
+        @if (session()->has('success'))
+            {{-- <p class="alert alert-success">{{ session('success') }}</p> --}}
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                Swal.fire({
+                    title: 'Success!',
+                    text: '{{ session('success') }}',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                });
+            </script>
+        @endif
         <!-- Search + Filter -->
         <form class="row g-3 align-items-center mb-4" action="{{ route('products.index') }}" method="GET">
             <div class="col-md-6">
                 <div class="form-floating h-100">
-                    <input type="text" class="form-control" id="floatingInput" placeholder="Search product" name="search"
-                        value="{{ request('search') }}">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="Search product"
+                        name="search" value="{{ request('search') }}">
                     <label for="floatingInput">Search</label>
                 </div>
             </div>
@@ -53,7 +64,8 @@
                     <div class="card h-100 hover-effect">
                         <div class="card-img-container"
                             style="position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden;">
-                            <img class="card-img-top" src="{{ url('storage/images/' . $product->product_image) }}"
+                            <img class="card-img-top"
+                                src="{{ $product->product_image ? url('storage/images/' . $product->product_image) : asset('images/box-icon.jpg') }}"
                                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
                                 alt="Product {{ $product->name }}">
                         </div>
@@ -75,9 +87,9 @@
                                         <p class="mb-0 me-2">{{ $product->stock }} {{ $product->unit }}</p>
                                         <button class="btn btn-sm btn-primary">+</button>
                                     </div>
-                                    
 
-                           
+
+
                                 </div>
                                 <div class="">
                                     <div class="mb-3 d-flex">
@@ -99,12 +111,15 @@
                         <div class="card-footer d-flex justify-content-between align-items-center">
                             <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             <button class="btn btn-sm btn-primary">Add To Cart <i class='tf-icons bx bx-cart'></i></button>
-                            <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                onsubmit="return confirm('Are you sure you want to delete this product?')">
+                            <form id="delete-form-{{ $product->id }}"
+                                action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                style="display: none;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger" type="submit">Delete</button>
                             </form>
+
+                            <button class="btn btn-sm btn-danger"
+                                onclick="confirmDelete({{ $product->id }})">Delete</button>
                         </div>
                     </div>
 
@@ -119,4 +134,24 @@
             {{ $products->links() }}
         </div>
     </div>
+    <script>
+        function confirmDelete(productId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This product will be permanently deleted.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                backdrop: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById('delete-form-' + productId).submit();
+                }
+            });
+        }
+    </script>
 @endsection

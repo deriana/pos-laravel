@@ -8,9 +8,9 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::table('purchase_items', function (Blueprint $table) {
-            $table->timestamps();
-        });
+        // Schema::table('purchase_items', function (Blueprint $table) {
+        //     $table->timestamps();
+        // });
     }
     
     public function down()
