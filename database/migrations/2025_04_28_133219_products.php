@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('product_image')->nullable();
             $table->decimal('purchase_price', 15,2);
             $table->decimal('selling_price', 15,2);
-            $table->integer('stock');
+            $table->integer('stock')->default(0);
             $table->enum('unit', ['pcs', 'box', 'liter']);
             $table->timestamps();
         });

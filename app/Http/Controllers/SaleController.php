@@ -36,10 +36,11 @@ class SaleController extends Controller
 
     public function create()
     {
-        dd(session('checkout_cart'));
+        // dd(session('checkout_cart'));
+        $cart = session()->get('checkout_cart', []); // Pastikan cek nama sessionnya
         $customers = Customer::all();
         $products = Products::all();
-        return view('sales.create', compact('customers', 'products'));
+        return view('sales.create', compact('customers', 'products', 'cart'));
     }
 
     public function store(Request $request)
@@ -54,12 +55,6 @@ class SaleController extends Controller
             'amount_paid' => 'nullable|numeric|min:0',
             'payment_method' => 'nullable|in:cash,transfer',
             'payment_date' => 'nullable|date',
-
-            // Customer field
-            'name' => 'required',
-            'phone_number' => 'required',
-            'email' => 'nullable',
-            'address' => 'required',
         ]);
 
         // Customer
@@ -145,6 +140,8 @@ class SaleController extends Controller
                 'note' => $request->note,
             ]);
         }
+        
+        session()->forget('checkout_cart');
 
         return redirect()->route('sales.index')->with('success', 'Transaksi penjualan berhasil dibuat!');
     }

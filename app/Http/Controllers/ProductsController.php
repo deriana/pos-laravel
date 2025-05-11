@@ -49,7 +49,6 @@ class ProductsController extends Controller
             'product_image' => 'required|image|mimes:jpeg,png,jpg,gif',
             'purchase_price' => 'required|numeric',
             'selling_price' => 'required|numeric',
-            'stock' => 'required|integer',
             'unit' => 'required|string|max:50',
         ]);
 
@@ -76,7 +75,6 @@ class ProductsController extends Controller
             'product_image' => $imageName,  // Simpan nama file
             'purchase_price' => $request->purchase_price,
             'selling_price' => $request->selling_price,
-            'stock' => $request->stock,
             'unit' => $request->unit,
         ]);
 
@@ -103,7 +101,6 @@ class ProductsController extends Controller
             'product_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'purchase_price' => 'required|numeric',
             'selling_price' => 'required|numeric',
-            'stock' => 'required|integer',
             'unit' => 'required|string|max:50',
         ]);
 
@@ -136,7 +133,6 @@ class ProductsController extends Controller
             'product_image' => $imageName, // Menyimpan nama file gambar
             'purchase_price' => $request->purchase_price,
             'selling_price' => $request->selling_price,
-            'stock' => $request->stock,
             'unit' => $request->unit,
         ]);
 

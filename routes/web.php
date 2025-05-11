@@ -8,9 +8,10 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
 use App\Http\Middleware\CheckAuthenticated;
+use App\Http\Middleware\CheckVerified;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(CheckAuthenticated::class)->group(function () {
+Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(function () {
     Route::get('/', function () {
         return view('Dashboard.index');
     });
@@ -38,8 +39,8 @@ Route::middleware(CheckAuthenticated::class)->group(function () {
 
 // Auth Route
 Route::middleware('guest')->group(function () {
-    Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
-    Route::post('/register', [AuthController::class, 'register']);
+    // Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('auth.register');
+    // Route::post('/register', [AuthController::class, 'register']);
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('auth.login');
     Route::post('/login', [AuthController::class, 'login']);
 });

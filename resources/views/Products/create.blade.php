@@ -45,12 +45,12 @@
                 </div>
 
                 <!-- Stock -->
-                <div class="col-md-6">
+                {{-- <div class="col-md-6">
                     <div class="form-floating">
                         <input type="number" class="form-control" id="stock" name="stock" placeholder="Stock" required>
                         <label for="stock">Stock</label>
                     </div>
-                </div>
+                </div> --}}
 
                 <!-- Unit -->
                 <div class="col-md-6">
