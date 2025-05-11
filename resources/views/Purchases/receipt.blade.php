@@ -128,3 +128,8 @@
     </div>
 </body>
 </html>
+<script>
+    window.onload = function() {
+        window.print(); // Memanggil fungsi print setelah halaman sepenuhnya dimuat
+    };
+</script>

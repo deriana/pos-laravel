@@ -35,16 +35,25 @@ class PurchaseController extends Controller
     }
 
 
-    public function showReceipt($id)
+    public function showReceipt($id, Request $request)
     {
         $purchase = Purchase::with(['supplier', 'purchaseItems.product', 'payments'])->findOrFail($id);
 
-        // Membuat instance PDF
         $pdf = app(PDF::class)->loadView('purchases.receipt', compact('purchase'));
 
-        // Kembalikan hasil sebagai file PDF
-        return $pdf->download('struk_pembelian_' . $purchase->invoice_number . '.pdf');
+        if ($request->query('print') == 'true') {
+            return $pdf->stream('struk_pembelian_' . $purchase->invoice_number . '.pdf');
+        } else {
+            return $pdf->download('struk_pembelian_' . $purchase->invoice_number . '.pdf');
+        }
     }
+
+    public function viewReceipt($id)
+    {
+        $purchase = Purchase::with(['supplier', 'purchaseItems.product', 'payments'])->findOrFail($id);
+        return view('purchases.receipt', compact('purchase'));
+    }
+
 
 
     public function create()
@@ -168,7 +177,10 @@ class PurchaseController extends Controller
             ]);
         }
 
-        return redirect()->route('purchases.index')->with('success', 'Transaksi pembelian berhasil dibuat!');
+        return redirect()->route('purchases.index')->with([
+            'success' => 'Transaksi berhasil!',
+            'purchase_id' => $purchase->id
+        ]);
     }
 
 

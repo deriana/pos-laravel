@@ -32,6 +32,7 @@ Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(func
     Route::resource('/purchases', PurchaseController::class);
     Route::resource('/sales', SaleController::class);
     Route::get('purchases/{id}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.receipt');
+    Route::get('/purchases/receipt-view/{id}', [PurchaseController::class, 'viewReceipt'])->name('purchases.receipt.view');
     Route::post('/purchase/{id}/pay-debt', [PurchaseController::class, 'payDebt'])->name('purchase.pay.debt');
     Route::post('/checkout', [CartController::class, 'store'])->name('cart.store');
 });
