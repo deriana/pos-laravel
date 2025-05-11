@@ -16,4 +16,15 @@ class ImageController extends Controller
             abort(404);
         }
     }
+
+    public function showQrCode($filename)
+    {
+        $path = storage_path("app/private/public/qr/{$filename}");
+
+        if (file_exists($path)) {
+            return response()->file($path);
+        } else {
+            abort(404, 'QR Code not found.');
+        }
+    }
 }

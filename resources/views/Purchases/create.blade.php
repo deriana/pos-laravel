@@ -9,7 +9,7 @@
         }
     </style>
     <div class="container mt-4">
-        @if ($errors->any())
+        {{-- @if ($errors->any())
             <div class="alert alert-danger">
                 <strong>Oops!</strong> Ada beberapa masalah dengan input kamu.<br><br>
                 <ul>
@@ -18,7 +18,7 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+        @endif --}}
 
         <h2 class="mb-4">Form Pembelian</h2>
         <div class="row">

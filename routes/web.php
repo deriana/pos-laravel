@@ -23,6 +23,7 @@ Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(func
     });
 
     Route::get('storage/images/{filename}', [ImageController::class, 'showImage']);
+    Route::get('storage/qr/{filename}', [ImageController::class, 'showQrCode']);
     Route::resource('/categories', CategoriesController::class);
     Route::get('/edit-profile', [AuthController::class, 'showEditProfile'])->name('auth.profile');
     Route::post('/edit-profile', [AuthController::class, 'updateProfile'])->name('auth.updateProfile');

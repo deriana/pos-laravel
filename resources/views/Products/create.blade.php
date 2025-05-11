@@ -3,7 +3,16 @@
 @section('content')
     <div class="container-wrapper">
         <h1>Create Product</h1>
-
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>Oops!</strong> Ada beberapa masalah dengan input kamu.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
         <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
             @csrf
 
@@ -11,7 +20,8 @@
                 <!-- Product Name -->
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="productName" name="name" placeholder="Product Name" required>
+                        <input type="text" class="form-control" id="productName" name="name" placeholder="Product Name"
+                            required>
                         <label for="productName">Product Name</label>
                     </div>
                 </div>
@@ -21,7 +31,7 @@
                     <div class="form-floating">
                         <select class="form-select" id="category" name="category_id" required>
                             <option value="">Select Category</option>
-                            @foreach($categories as $category)
+                            @foreach ($categories as $category)
                                 <option value="{{ $category->id }}">{{ $category->name }}</option>
                             @endforeach
                         </select>
@@ -32,14 +42,16 @@
                 <!-- Price -->
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="number" class="form-control" id="purchasePrice" name="purchase_price" placeholder="Purchase Price" required>
+                        <input type="number" class="form-control" id="purchasePrice" name="purchase_price"
+                            placeholder="Purchase Price" required>
                         <label for="purchasePrice">Purchase Price</label>
                     </div>
                 </div>
 
                 <div class="col-md-6">
                     <div class="form-floating">
-                        <input type="number" class="form-control" id="sellingPrice" name="selling_price" placeholder="Selling Price" required>
+                        <input type="number" class="form-control" id="sellingPrice" name="selling_price"
+                            placeholder="Selling Price" required>
                         <label for="sellingPrice">Selling Price</label>
                     </div>
                 </div>
@@ -64,13 +76,14 @@
                         <label for="unit">Unit</label>
                     </div>
                 </div>
-                
+
 
                 <!-- Product Image Upload and Preview -->
                 <div class="col-md-6">
                     <div class="form-group">
                         <label for="productImage">Product Image</label>
-                        <input type="file" class="form-control" id="productImage" name="product_image" accept="image/*" onchange="previewImage(event)">
+                        <input type="file" class="form-control" id="productImage" name="product_image" accept="image/*"
+                            onchange="previewImage(event)">
                         <div id="imagePreview" class="mt-2"></div>
                     </div>
                 </div>

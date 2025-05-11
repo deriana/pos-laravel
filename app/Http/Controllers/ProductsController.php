@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Categories;
 use App\Models\Products;
+use App\Models\QrCode as ModelsQrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class ProductsController extends Controller
 {
@@ -14,7 +16,7 @@ class ProductsController extends Controller
     {
         $categories = Categories::all();
 
-        $query = Products::query();
+        $query = Products::query()->with(['qrCode']);
 
         // Jika ada query pencarian nama produk
         if ($request->has('search') && $request->search != '') {
@@ -68,7 +70,7 @@ class ProductsController extends Controller
         }
 
         // Simpan produk
-        Products::create([
+        $product = Products::create([
             'category_id' => $request->category_id,
             'name' => $request->name,
             'sku' => $sku,
@@ -78,7 +80,21 @@ class ProductsController extends Controller
             'unit' => $request->unit,
         ]);
 
-        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
+        $qrContent = $sku; // atau bisa ID, nama produk, dsb
+        $qrFileName = 'qr-' . uniqid() . '.png';
+
+        // Simpan QR code sebagai file ke storage/public/qr
+        Storage::put("public/qr/{$qrFileName}", QrCode::format('png')->size(300)->generate($qrContent));
+
+        $qrName = basename($qrFileName);
+
+        // Simpan ke tabel qr_codes
+        ModelsQrCode::create([
+            'product_id' => $product->id,
+            'filename' => $qrName
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
 
@@ -136,8 +152,7 @@ class ProductsController extends Controller
             'unit' => $request->unit,
         ]);
 
-        // Contoh di store() atau update() method
-        return redirect()->route('products.index')->with('success', 'Product has been successfully added/updated.');
+        return redirect()->route('products.index')->with('success', 'Produk berhasil diperbarui.');
     }
 
 
