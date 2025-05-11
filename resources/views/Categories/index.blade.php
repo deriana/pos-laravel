@@ -2,10 +2,11 @@
 
 @section('content')
     <div class="content-wrapper">
-        <h1>Categories</h1>
-
-        <!-- Tambah Kategori Button -->
-        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Tambah Kategori</button>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Categories</h1>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Tambah
+                Kategori</button>
+        </div>
 
         @if (session()->has('success'))
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -19,38 +20,42 @@
             </script>
         @endif
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>Nama Kategori</th>
-                    <th>Deskripsi</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($categories as $category)
+        <div class="card p-4">
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $category->name }}</td>
-                        <td>{{ $category->description }}</td>
-                        <td>
-                            <!-- Edit Kategori Button -->
-                            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCategoryModal" 
-                                    data-id="{{ $category->id }}" data-name="{{ $category->name }}">Edit</button>
-                            
-                            <!-- Delete Kategori Button -->
-                            <form id="deleteForm{{ $category->id }}" action="{{ route('categories.destroy', $category->id) }}"
-                                  method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="button" class="btn btn-danger" onclick="confirmDelete({{ $category->id }})">Hapus</button>
-                            </form>
-                        </td>
+                        <th>No</th>
+                        <th>Nama Kategori</th>
+                        <th>Deskripsi</th>
+                        <th>Aksi</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($categories as $category)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $category->name }}</td>
+                            <td>{{ $category->description }}</td>
+                            <td>
+                                <!-- Edit Kategori Button -->
+                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
+                                    data-id="{{ $category->id }}" data-name="{{ $category->name }}">Edit</button>
+
+                                <!-- Delete Kategori Button -->
+                                <form id="deleteForm{{ $category->id }}"
+                                    action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                                    style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="button" class="btn btn-danger"
+                                        onclick="confirmDelete({{ $category->id }})">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Add Category Modal -->
@@ -80,7 +85,8 @@
     </div>
 
     <!-- Edit Category Modal -->
-    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel" aria-hidden="true">
+    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -129,7 +135,7 @@
 
         // Mengisi form edit dengan data kategori yang dipilih
         var editCategoryModal = document.getElementById('editCategoryModal')
-        editCategoryModal.addEventListener('show.bs.modal', function (event) {
+        editCategoryModal.addEventListener('show.bs.modal', function(event) {
             var button = event.relatedTarget; // Tombol Edit
             var categoryId = button.getAttribute('data-id');
             var categoryName = button.getAttribute('data-name');

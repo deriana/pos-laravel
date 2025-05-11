@@ -11,15 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // asumsi user sudah ada
-            $table->foreignId('product_id')->constrained()->cascadeOnDelete();
-            $table->integer('quantity')->default(1);
-            $table->timestamps();
+        // Schema::create('carts', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // asumsi user sudah ada
+        //     $table->foreignId('product_id')->constrained()->cascadeOnDelete();
+        //     $table->integer('quantity')->default(1);
+        //     $table->timestamps();
 
-            $table->unique(['user_id', 'product_id']); // satu produk per user hanya satu entry
-        });    }
+        //     $table->unique(['user_id', 'product_id']); // satu produk per user hanya satu entry
+        // });    
+    }
 
     /**
      * Reverse the migrations.

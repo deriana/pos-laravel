@@ -18,7 +18,7 @@
             <a href="{{ route('products.create') }}" class="btn btn-primary">+ Create Product</a>
         </div>
         @if (session()->has('success'))
-            {{-- <p class="alert alert-success">{{ session('success') }}</p> --}}
+            <p class="alert alert-success">{{ session('success') }}</p>
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
             <script>
                 Swal.fire({

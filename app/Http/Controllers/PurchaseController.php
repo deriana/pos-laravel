@@ -7,6 +7,7 @@ use App\Models\Supplier;
 use App\Models\Products;
 use App\Models\PurchaseItem;
 use App\Models\AccountsPayable;
+use App\Models\Categories;
 use App\Models\PurchasePayment;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
@@ -50,7 +51,8 @@ class PurchaseController extends Controller
     {
         $suppliers = Supplier::all();
         $products = Products::all();
-        return view('purchases.create', compact('suppliers', 'products'));
+        $categories = Categories::all();
+        return view('purchases.create', compact('suppliers', 'products', 'categories'));
     }
 
     public function store(Request $request)
@@ -58,7 +60,7 @@ class PurchaseController extends Controller
         $request->validate([
             // Validasi untuk supplier lama atau data supplier baru
             'supplier_id' => 'nullable|exists:suppliers,id',
-            'supplier.name' => 'required_without:supplier_id|string|max:255',
+            'supplier.name' => 'nullable|string|max:255',
             'supplier.email' => 'nullable|string|',
             'supplier.phone_number' => 'nullable|string|max:20',
             'supplier.address' => 'nullable|string|max:255',
