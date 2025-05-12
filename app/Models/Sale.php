@@ -10,9 +10,16 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'customer_id', 'sale_date', 'invoice_number',
-        'total', 'discount', 'tax', 'grand_total',
-        'payment_status', 'note'
+        'user_id',
+        'customer_id',
+        'sale_date',
+        'invoice_number',
+        'total',
+        'discount',
+        'tax',
+        'grand_total',
+        'payment_status',
+        'note'
     ];
 
     public function customer()
@@ -28,5 +35,9 @@ class Sale extends Model
     public function payments()
     {
         return $this->hasMany(SalePayment::class);
+    }
+    public function accountsReceivable()
+    {
+        return $this->hasMany(AccountsReceivable::class);
     }
 }

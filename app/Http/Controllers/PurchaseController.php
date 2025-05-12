@@ -31,7 +31,7 @@ class PurchaseController extends Controller
             ->latest()
             ->get();
 
-        return view('purchases.index', compact('purchases'));
+        return view('Purchases.index', compact('purchases'));
     }
 
 
@@ -39,7 +39,7 @@ class PurchaseController extends Controller
     {
         $purchase = Purchase::with(['supplier', 'purchaseItems.product', 'payments'])->findOrFail($id);
 
-        $pdf = app(PDF::class)->loadView('purchases.receipt', compact('purchase'));
+        $pdf = app(PDF::class)->loadView('Purchases.receipt', compact('purchase'));
 
         if ($request->query('print') == 'true') {
             return $pdf->stream('struk_pembelian_' . $purchase->invoice_number . '.pdf');
@@ -51,7 +51,7 @@ class PurchaseController extends Controller
     public function viewReceipt($id)
     {
         $purchase = Purchase::with(['supplier', 'purchaseItems.product', 'payments'])->findOrFail($id);
-        return view('purchases.receipt', compact('purchase'));
+        return view('Purchases.receipt', compact('purchase'));
     }
 
 
@@ -61,7 +61,7 @@ class PurchaseController extends Controller
         $suppliers = Supplier::all();
         $products = Products::all();
         $categories = Categories::all();
-        return view('purchases.create', compact('suppliers', 'products', 'categories'));
+        return view('Purchases.create', compact('suppliers', 'products', 'categories'));
     }
 
     public function store(Request $request)

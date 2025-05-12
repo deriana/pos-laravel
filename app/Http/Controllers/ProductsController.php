@@ -31,14 +31,14 @@ class ProductsController extends Controller
         // Memuat relasi 'category' dengan eager loading
         $products = $query->with('category')->paginate(6); // Ubah 'categories' menjadi 'category'
 
-        return view('products.index', compact('products', 'categories'));
+        return view('Products.index', compact('products', 'categories'));
     }
 
     // Tampilkan form untuk menambah produk
     public function create()
     {
         $categories = Categories::all();  // Mengambil semua kategori untuk dropdown
-        return view('products.create', compact('categories'));
+        return view('Products.create', compact('categories'));
     }
 
     // Simpan produk baru
@@ -104,7 +104,7 @@ class ProductsController extends Controller
     {
         $product = Products::findOrFail($id);
         $categories = Categories::all();
-        return view('products.edit', compact('product', 'categories'));
+        return view('Products.edit', compact('product', 'categories'));
     }
 
     // Update data produk

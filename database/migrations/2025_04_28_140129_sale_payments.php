@@ -17,7 +17,7 @@ return new class extends Migration
             $table->decimal('amount', 15,2);
             $table->date('payment_date');
             $table->enum('payment_methode', ['cash', 'transfer']);
-            $table->text('note');
+            $table->text('note')->nullable();
         });
     }
 

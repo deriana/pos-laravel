@@ -168,68 +168,68 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     document
-        .getElementById("supplier_option")
+        .getElementById("customer_option")
         .addEventListener("change", function () {
             // Ambil nilai dari opsi yang dipilih
             var selectedOption = this.value;
 
             // Sembunyikan semua elemen terlebih dahulu
-            document.getElementById("supplier-select-container").style.display =
+            document.getElementById("customer-select-container").style.display =
                 "none";
-            document.getElementById("supplier-input-container").style.display =
+            document.getElementById("customer-input-container").style.display =
                 "none";
             document
-                .querySelector('input[name="supplier[name]"]')
+                .querySelector('input[name="customer[name]"]')
                 .removeAttribute("required");
             document
-                .querySelector('input[name="supplier[phone_number]"]')
+                .querySelector('input[name="customer[phone_number]"]')
                 .removeAttribute("required");
             document
-                .querySelector('input[name="supplier[email]"]')
+                .querySelector('input[name="customer[email]"]')
                 .removeAttribute("required");
             document
-                .querySelector('textarea[name="supplier[address]"]')
+                .querySelector('textarea[name="customer[address]"]')
                 .removeAttribute("required");
             // Periksa nilai yang dipilih dan sesuaikan tampilan
             if (selectedOption === "input") {
-                // Tampilkan form input manual dan sembunyikan dropdown supplier
+                // Tampilkan form input manual dan sembunyikan dropdown customer
                 document.getElementById(
-                    "supplier-input-container"
+                    "customer-input-container"
                 ).style.display = "block";
                 document
-                    .querySelector('input[name="supplier[name]"]')
+                    .querySelector('input[name="customer[name]"]')
                     .setAttribute("required", "true");
                 document
-                    .querySelector('input[name="supplier[phone_number]"]')
+                    .querySelector('input[name="customer[phone_number]"]')
                     .setAttribute("required", "true");
                 document
-                    .querySelector('input[name="supplier[email]"]')
+                    .querySelector('input[name="customer[email]"]')
                     .setAttribute("required", "true");
                 document
-                    .querySelector('textarea[name="supplier[address]"]')
+                    .querySelector('textarea[name="customer[address]"]')
                     .setAttribute("required", "true");
             } else if (selectedOption === "select") {
                 document
-                    .querySelector('input[name="supplier[name]"]')
+                    .querySelector('input[name="customer[name]"]')
                     .removeAttribute("required");
                 document
-                    .querySelector('input[name="supplier[phone_number]"]')
+                    .querySelector('input[name="customer[phone_number]"]')
                     .removeAttribute("required");
                 document
-                    .querySelector('input[name="supplier[email]"]')
+                    .querySelector('input[name="customer[email]"]')
                     .removeAttribute("required");
                 document
-                    .querySelector('textarea[name="supplier[address]"]')
+                    .querySelector('textarea[name="customer[address]"]')
                     .removeAttribute("required");
                 document.getElementById(
-                    "supplier-select-container"
+                    "customer-select-container"
                 ).style.display = "block";
             } else if (selectedOption === "select-opsi") {
                 document.getElementById(
-                    "supplier-select-container"
+                    "customer-select-container"
                 ).style.display = "none";
                 document.getElementById(
-                    "supplier-input-container"
+                    "customer-input-container"
                 ).style.display = "none";
             }
         });

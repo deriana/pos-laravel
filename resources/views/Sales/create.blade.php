@@ -1,159 +1,154 @@
 @extends('layout.app')
 
 @section('content')
-    <div class="container">
-        <h2>Form Penjualan</h2>
-        <form action="{{ route('sales.store') }}" method="POST">
-            @csrf
-
-            <!-- Customer -->
-            <div class="mb-3">
-                <label for="customer_id" class="form-label">Customer</label>
-                <select name="customer_id" id="customer_id" class="form-control" required>
-                    <option value="">Pilih Customer</option>
-                    @foreach ($customers as $customer)
-                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+    <style>
+        .card-img-top {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+        }
+    </style>
+    <div class="container mt-4">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <strong>Oops!</strong> Ada beberapa masalah dengan input kamu.<br><br>
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
                     @endforeach
-                </select>
+                </ul>
+            </div>
+        @endif
+
+        <h2 class="mb-4">Form Penjualan</h2> <!-- Ubah dari "Form Pembelian" -->
+        <div class="row">
+            <!-- Sisi Kiri - List Produk -->
+            <div class="col-md-6">
+                <div class="mb-4">
+                    <label for="search_product" class="form-label fw-semibold">Cari Produk</label>
+                    <input type="text" id="search_product" class="form-control shadow-sm" placeholder="Cari produk...">
+                </div>
+
+                <div class="mb-4">
+                    <label for="filter_category" class="form-label fw-semibold">Filter Kategori</label>
+                    <select id="filter_category" class="form-select shadow-sm">
+                        <option value="">Pilih Kategori</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-2 g-4">
+                    @foreach ($products as $product)
+                        <div class="col">
+                            <div class="card h-100">
+                                <img src="{{ $product->product_image ? url('storage/images/' . $product->product_image) : asset('images/box-icon.jpg') }}"
+                                    class="card-img-top" alt="Product {{ $product->name }}">
+                                <div class="card-body d-flex flex-column justify-content-between">
+                                    <h5 class="card-title">{{ $product->name }}</h5>
+                                    <p class="card-category">{{ $product->category->name }}</p>
+                                    <p class="card-text">Rp {{ number_format($product->purchase_price, 2, ',', '.') }}</p>
+                                    <button class="btn btn-primary btn-sm add-to-cart" data-id="{{ $product->id }}"
+                                        data-name="{{ $product->name }}" data-price="{{ $product->purchase_price }}"
+                                        data-stock="{{ $product->stock }}" data-image="{{ $product->product_image }}">
+                                        Tambah ke Keranjang
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
             </div>
 
-            <!-- Produk -->
-            <div class="mb-3">
-                <label for="products" class="form-label">Pilih Produk</label>
-                <div id="product-selection">
-                    <div class="product-item mb-3">
-                        <select name="products[0][id]" class="form-control product-id" required>
-                            <option value="">Pilih Produk</option>
-                            @foreach ($products as $product)
-                                <option value="{{ $product->id }}" data-price="{{ $product->selling_price }}">
-                                    {{ $product->name }} - Rp. {{ number_format($product->selling_price, 2) }} .
-                                    {{ $product->stock }}
-                                </option>
+            <!-- Sisi Kanan - Form Transaksi -->
+            <div class="col-md-6">
+                <form action="{{ route('sales.store') }}" method="POST">
+                    @csrf
+
+                    <div class="mb-4">
+                        <label for="customer_option" class="form-label fw-semibold">Customer</label>
+                        <select id="customer_option" class="form-select shadow-sm">
+                            <option value="select-opsi">Pilih Opsi</option>
+                            <option value="select">Pilih dari Daftar</option>
+                            <option value="input">Input Manual</option>
+                        </select>
+
+                    </div>
+
+                    <div id="customer-select-container" style="display: none;" class="mb-4">
+                        <select name="customer_id" id="customer_id" class="form-select shadow-sm">
+                            <option value="">Pilih Customer</option>
+                            @foreach ($customers as $customer)
+                                <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                             @endforeach
                         </select>
-                        <input type="number" name="products[0][quantity]" class="form-control mt-2 quantity"
-                            placeholder="Jumlah" min="1" required>
-                        <input type="hidden" name="products[0][price]" class="form-control mt-2 price">
-                        <input type="hidden" name="products[0][subtotal]" class="form-control mt-2 subtotal">
-                        <button type="button" class="btn btn-danger mt-2 remove-product" style="display:none;">Hapus
-                            Produk</button>
                     </div>
-                </div>
-                <button type="button" id="add-product" class="btn btn-primary mt-2">Tambah Produk</button>
-            </div>
 
-            <!-- Diskon -->
-            <div class="mb-3">
-                <label for="discount" class="form-label">Diskon (%)</label>
-                <input type="number" name="discount" id="discount" class="form-control" step="any" min="0"
-                    max="100" value="0">
-            </div>
+                    <div id="customer-input-container" style="display: none;" class="mb-4">
+                        <input type="text" name="customer[name]" class="form-control mb-2 shadow-sm"
+                            placeholder="Nama Customer">
+                        <input type="text" name="customer[phone_number]" class="form-control mb-2 shadow-sm"
+                            placeholder="No. Telepon">
+                        <input type="email" name="customer[email]" class="form-control mb-2 shadow-sm"
+                            placeholder="Email">
+                        <textarea name="customer[address]" class="form-control mb-2 shadow-sm" placeholder="Alamat" rows="3"></textarea>
+                    </div>
 
-            <!-- Jumlah Dibayar -->
-            <div class="mb-3">
-                <label for="amount_paid" class="form-label">Jumlah Dibayar</label>
-                <input type="number" name="amount_paid" id="amount_paid" class="form-control" min="0"
-                    step="any">
-            </div>
+                    <div class="mb-4">
+                        <h5>Produk yang Dipilih</h5>
+                        <div id="cart-products" class="cart-products-container row row-cols-1 row-cols-md-2 g-4">
+                            <!-- Produk akan ditambahkan secara dinamis di sini -->
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="discount" class="form-label fw-semibold">Diskon (%)</label>
+                        <input type="number" name="discount" class="form-control" id="discount" min="0"
+                            max="100" step="0.01" placeholder="Masukkan Diskon (%)">
+                    </div>
 
-            <!-- Metode Pembayaran -->
-            <div class="mb-3">
-                <label for="payment_method" class="form-label">Metode Pembayaran</label>
-                <select name="payment_method" id="payment_method" class="form-control">
-                    <option value="cash">Cash</option>
-                    <option value="credit">Credit</option>
-                </select>
-            </div>
+                    <div class="mb-4">
+                        <label for="payment_method" class="form-label fw-semibold">Metode Pembayaran</label>
+                        <select name="payment_method" id="payment_method" class="form-select">
+                            <option value="cash">Cash</option>
+                            <option value="credit">Kredit</option>
+                        </select>
+                    </div>
 
-            <!-- Tanggal Penjualan -->
-            <div class="mb-3">
-                <label for="sale_date" class="form-label">Tanggal Penjualan</label>
-                <input type="date" name="sale_date" id="sale_date" class="form-control"
-                    value="{{ now()->format('Y-m-d') }}">
-            </div>
+                    <div class="mb-4">
+                        <label for="payment_date" class="form-label fw-semibold">Tanggal Pembayaran</label>
+                        <input type="date" name="payment_date" class="form-control" id="payment_date" value="now">
+                    </div>
 
-            <!-- Catatan -->
-            <div class="mb-3">
-                <label for="note" class="form-label">Catatan</label>
-                <textarea name="note" id="note" class="form-control" rows="3"></textarea>
-            </div>
+                    <div class="mb-4">
+                        <label for="note" class="form-label fw-semibold">Catatan</label>
+                        <textarea name="note" class="form-control" id="note" rows="3"
+                            placeholder="Masukkan catatan tambahan"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="amount_paid" class="form-label fw-semibold">Jumlah Dibayar</label>
+                        <input type="number" id="amount_paid" name="amount_paid" class="form-control" min="0"
+                            placeholder="Masukkan Jumlah yang Dibayar" oninput="calculateTotal()">
+                    </div>
 
-            <!-- Total Harga -->
-            <div class="mt-3" id="total-price">
-                Total: Rp. 0.00
-            </div>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="mb-4">
+                            <h5>Grand Total</h5>
+                            <p id="grand-total">Rp 0</p>
+                        </div>
 
-            <button type="submit" class="btn btn-success">Simpan Transaksi</button>
-        </form>
+                        <div class="mb-4">
+                            <h5>Kembalian</h5>
+                            <p id="change">Rp 0</p>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Simpan Transaksi</button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const addProductBtn = document.getElementById('add-product');
-                const productSelection = document.getElementById('product-selection');
-
-                addProductBtn.addEventListener('click', function() {
-                    const productCount = document.querySelectorAll('.product-item').length;
-                    const newProductItem = document.createElement('div');
-                    newProductItem.classList.add('product-item', 'mb-3');
-                    newProductItem.innerHTML = `
-            <select name="products[${productCount}][id]" class="form-control product-id" required>
-                <option value="">Pilih Produk</option>
-                @foreach ($products as $product)
-                    <option value="{{ $product->id }}" data-price="{{ $product->selling_price }}">
-                        {{ $product->name }} - Rp. {{ number_format($product->selling_price, 2) }} . {{ $product->stock }}
-                    </option>
-                @endforeach
-            </select>
-            <input type="number" name="products[${productCount}][quantity]" class="form-control mt-2 quantity" placeholder="Jumlah" min="1" required>
-            <input type="hidden" name="products[${productCount}][price]" class="form-control mt-2 price"> <!-- Hidden price input -->
-            <input type="hidden" name="products[${productCount}][subtotal]" class="form-control mt-2 subtotal">
-            <button type="button" class="btn btn-danger mt-2 remove-product">Hapus Produk</button>
-        `;
-                    productSelection.appendChild(newProductItem);
-                    updateRemoveButtons();
-                });
-
-                function updateRemoveButtons() {
-                    document.querySelectorAll('.remove-product').forEach(button => {
-                        button.addEventListener('click', function() {
-                            this.parentElement.remove();
-                            updateSubtotal();
-                        });
-                    });
-                }
-
-                productSelection.addEventListener('input', function(e) {
-                    if (e.target.classList.contains('quantity') || e.target.classList.contains('product-id')) {
-                        updateSubtotal();
-                    }
-                });
-
-                function updateSubtotal() {
-                    let total = 0;
-                    document.querySelectorAll('.product-item').forEach(item => {
-                        const quantity = item.querySelector('.quantity').value;
-                        const productId = item.querySelector('.product-id').value;
-                        const price = item.querySelector('.product-id').selectedOptions[0].getAttribute(
-                            'data-price');
-                        const subtotal = (parseFloat(quantity) || 0) * (parseFloat(price) || 0);
-                        item.querySelector('.price').value = price; // Set the hidden price field
-                        item.querySelector('.subtotal').value = subtotal;
-                        total += subtotal;
-                    });
-
-                    // Diskon
-                    const discount = parseFloat(document.getElementById('discount').value) || 0;
-                    const discountedTotal = total - (total * discount / 100);
-
-                    document.getElementById('total-price').textContent = 'Total: Rp. ' + discountedTotal.toFixed(2);
-                }
-
-                document.getElementById('discount').addEventListener('input', updateSubtotal);
-
-                updateRemoveButtons();
-            });
-        </script>
+    @push('script')
+        <script src="{{ asset('js/transactions/sale.js') }}"></script>
     @endpush
 @endsection

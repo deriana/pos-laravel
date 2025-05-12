@@ -138,7 +138,7 @@ class AuthController extends Controller
     
     public function showLoginForm()
     {
-        return view('auth.login');
+        return view('Auth.login');
     }
 
     public function login(Request $request)
@@ -159,7 +159,7 @@ class AuthController extends Controller
 
     public function showForgotPasswordForm()
     {
-        return view('auth.forgot-password');
+        return view('Auth.forgot-password');
     }
 
     public function sendResetLink(Request $request)
@@ -184,7 +184,7 @@ class AuthController extends Controller
 
     public function showResetPasswordForm($token)
     {
-        return view('auth.reset-password', ['token' => $token]);
+        return view('Auth.reset-password', ['token' => $token]);
     }
 
     public function resetPassword(Request $request)
@@ -229,7 +229,7 @@ class AuthController extends Controller
 
         $selectedAvatar = session('selectedAvatar', '1.png');
 
-        return view('auth.edit-profile', compact('fileNames', 'selectedAvatar'));
+        return view('Auth.edit-profile', compact('fileNames', 'selectedAvatar'));
     }
 
     public function updateProfile(Request $request)
@@ -265,7 +265,7 @@ class AuthController extends Controller
 
     public function showChangeEmailForm()
     {
-        return view('auth.change-email');
+        return view('Auth.change-email');
     }
 
 

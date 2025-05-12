@@ -11,13 +11,13 @@ class CategoriesController extends Controller
     public function index()
     {
         $categories = Categories::all();
-        return view('categories.index', compact('categories'));
+        return view('Categories.index', compact('categories'));
     }
 
     // Tampilkan form tambah kategori
     public function create()
     {
-        return view('categories.create');
+        return view('Categories.create');
     }
 
     // Simpan kategori baru
@@ -37,7 +37,7 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         $category = Categories::findOrFail($id);
-        return view('categories.edit', compact('category'));
+        return view('Categories.edit', compact('category'));
     }
 
     // Update data kategori

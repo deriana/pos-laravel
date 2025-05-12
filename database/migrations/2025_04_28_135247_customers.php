@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('phone_number');
             $table->string('email')->nullable();
             $table->text('address');
-            $table->decimal('credit_limit', 15,2)->nullable();
+            // $table->decimal('credit_limit', 15,2)->nullable();
             $table->timestamps();
         });
     }

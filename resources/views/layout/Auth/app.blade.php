@@ -1,7 +1,7 @@
-@include('layout.auth.header')
+@include('layout.Auth.header')
 
 <div class="container-xxl">
     @yield('content')
 </div>
 
-@include('layout.auth.footer')
+@include('layout.Auth.footer')

@@ -32,6 +32,9 @@ Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(func
     Route::post('/change-email', [AuthController::class, 'changeEmail'])->name('auth.changeEmailPost');
     Route::resource('/purchases', PurchaseController::class);
     Route::resource('/sales', SaleController::class);
+    Route::get('sales/{id}/receipt', [SaleController::class, 'showReceipt'])->name('sales.receipt');
+    Route::get('/sales/receipt-view/{id}', [SaleController::class, 'viewReceipt'])->name('sales.receipt.view');
+    Route::post('/sale/{id}/pay-debt', [SaleController::class, 'payDebt'])->name('sale.pay.debt');
     Route::get('purchases/{id}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.receipt');
     Route::get('/purchases/receipt-view/{id}', [PurchaseController::class, 'viewReceipt'])->name('purchases.receipt.view');
     Route::post('/purchase/{id}/pay-debt', [PurchaseController::class, 'payDebt'])->name('purchase.pay.debt');

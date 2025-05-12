@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('accounts_receivable', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
-            $table->decimal('amount', 15,2);
+            $table->decimal('amount_due', 15, 2);
+            $table->decimal('amount_paid', 15, 2);
+            $table->date('due_date');
             $table->enum('payment_method', ['cash', 'credit']);
-            $table->text('note')->nullable();
+            $table->enum('status', ['unpaid', 'partial', 'paid']);
         });
     }
 
