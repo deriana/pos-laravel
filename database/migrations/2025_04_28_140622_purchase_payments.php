@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('purchase_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 15,2)->default(0);
             $table->date('payment_date');
-            $table->enum('payment_method', ['cash', 'credit']);
+            $table->enum('payment_methode', ['cash', 'credit']);
             $table->text('note')->nullable();
         });
     }

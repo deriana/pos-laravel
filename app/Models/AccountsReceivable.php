@@ -13,7 +13,7 @@ class AccountsReceivable extends Model
 
     protected $table = 'accounts_receivable';
 
-    protected $fillable = ['sale_id', 'customer_id', 'amount_due', 'amount_paid', 'status', 'due_date', 'payment_method', 'note'];
+    protected $fillable = ['sale_id', 'customer_id', 'amount_due', 'amount_paid', 'status', 'due_date', 'payment_methode', 'note'];
 
     public function customer()
     {

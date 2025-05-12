@@ -12,7 +12,7 @@ class AccountsPayable extends Model
     protected $table = 'accounts_payable';
 
     protected $fillable = [
-        'supplier_id', 'purchase_id', 'amount_due', 'amount_paid', 'due_date', 'payment_method', 'status',
+        'supplier_id', 'purchase_id', 'amount_due', 'amount_paid', 'due_date', 'payment_methode', 'status',
     ];
 
     public $timestamps = false; 

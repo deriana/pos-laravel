@@ -18,7 +18,7 @@ return new class extends Migration
             $table->decimal('amount_due', 15, 2);
             $table->decimal('amount_paid', 15, 2);
             $table->date('due_date');
-            $table->enum('payment_method', ['cash', 'credit']);
+            $table->enum('payment_methode', ['cash', 'credit']);
             $table->enum('status', ['unpaid', 'partial', 'paid']);
         });
     }

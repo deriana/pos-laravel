@@ -79,7 +79,7 @@ class SaleController extends Controller
             'products.*.price' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0|max:100',
             'amount_paid' => 'nullable|numeric|min:0',
-            'payment_methode' => 'nullable|in:cash,transfer',
+            'payment_methode' => 'nullable|in:cash,kredit',
             'payment_date' => 'nullable|date',
             'note' => 'nullable|string|max:255',
         ]);
@@ -172,7 +172,7 @@ class SaleController extends Controller
                 'amount_due' => $grandTotal,
                 'amount_paid' => $paymentStatus === 'partial' ? $amountPaid : 0,
                 'due_date' => now()->addDays(30),
-                'payment_method' => $request->input('payment_method', 'cash'),
+                'payment_methode' => $request->input('payment_methode', 'cash'),
                 'status' => $paymentStatus,
             ]);
         }
@@ -195,7 +195,7 @@ class SaleController extends Controller
     {
         $request->validate([
             'amount' => 'required|numeric|min:0.01',
-            'payment_method' => 'required|in:cash,credit',
+            'payment_methode' => 'required|in:cash,credit',
             'payment_date' => 'required|date',
         ]);
 
@@ -207,7 +207,7 @@ class SaleController extends Controller
             'sale_id' => $sale->id,
             'amount' => $request->amount,
             'payment_date' => $request->payment_date,
-            'payment_method' => $request->payment_method,
+            'payment_methode' => $request->payment_methode,
             'note' => 'Pembayaran hutang',
         ]);
 

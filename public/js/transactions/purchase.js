@@ -105,10 +105,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="card-body">
                     <h5 class="card-title">${productName}</h5>
 
-                    <!-- ID produk (penting untuk validasi Laravel) -->
                     <input type="hidden" name="products[${cartProductsContainer.children.length}][id]" value="${productId}">
                     
-                    <!-- Input untuk quantity (satu-satunya input quantity yang digunakan) -->
                     <input type="number" name="products[${cartProductsContainer.children.length}][quantity]" class="form-control quantity" value="1" min="1" required oninput="calculateTotal()">
 
                     <p class="card-text">Harga: Rp ${productPrice}</p>

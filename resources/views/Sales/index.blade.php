@@ -136,7 +136,7 @@
                                                             <tr>
                                                                 <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}
                                                                 </td>
-                                                                <td>{{ ucfirst($payment->payment_method) }}</td>
+                                                                <td>{{ ucfirst($payment->payment_methode) }}</td>
                                                                 <td>Rp{{ number_format($payment->amount, 0, ',', '.') }}
                                                                 </td>
                                                                 <td>{{ $payment->note ?? '-' }}</td>

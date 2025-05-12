@@ -10,7 +10,7 @@ class PurchasePayment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'purchase_id', 'amount', 'payment_date', 'payment_method', 'note',
+        'purchase_id', 'amount', 'payment_date', 'payment_methode', 'note',
     ];
     protected $casts = [
         'payment_date' => 'datetime',

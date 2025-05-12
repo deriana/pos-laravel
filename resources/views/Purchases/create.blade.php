@@ -48,6 +48,7 @@
                                 <div class="card-body d-flex flex-column justify-content-between">
                                     <h5 class="card-title">{{ $product->name }}</h5>
                                     <p class="card-category">{{ $product->category->name }}</p>
+                                    <p class="card-stock">Stock {{ $product->stock }} {{ $product->unit }}</p>
                                     <p class="card-text">Rp {{ number_format($product->purchase_price, 2, ',', '.') }}</p>
                                     <button class="btn btn-primary btn-sm add-to-cart" data-id="{{ $product->id }}"
                                         data-name="{{ $product->name }}" data-price="{{ $product->purchase_price }}"
@@ -107,8 +108,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="payment_method" class="form-label fw-semibold">Metode Pembayaran</label>
-                        <select name="payment_method" id="payment_method" class="form-select">
+                        <label for="payment_methode" class="form-label fw-semibold">Metode Pembayaran</label>
+                        <select name="payment_methode" id="payment_methode" class="form-select">
                             <option value="cash">Cash</option>
                             <option value="credit">Kredit</option>
                         </select>
