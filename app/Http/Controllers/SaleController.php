@@ -25,7 +25,7 @@ class SaleController extends Controller
             'accountsReceivable'
         ])
             ->when(request('status'), function ($query, $status) {
-                $query->whereHas('accountsPayable', function ($q) use ($status) {
+                $query->whereHas('accountsReceivable', function ($q) use ($status) {
                     $q->where('status', $status);
                 });
             })

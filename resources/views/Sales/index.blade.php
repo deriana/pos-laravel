@@ -58,16 +58,16 @@
                         <table class="table table-hover table-striped">
                             <thead class="bg-primary text-white">
                                 <tr>
-                                    <th>#</th>
-                                    <th>Invoice</th>
-                                    <th>Customer</th>
-                                    <th>Tanggal</th>
-                                    <th>Total</th>
-                                    <th>Diskon</th>
-                                    <th>PPN (11%)</th>
-                                    <th>Grand Total</th>
-                                    <th>Status</th>
-                                    <th>Aksi</th>
+                                   <th class="text-white fw-bol">#</th>
+                                    <th class="text-white">Invoice</th>
+                                    <th class="text-white">Supplier</th>
+                                    <th class="text-white">Tanggal</th>
+                                    <th class="text-white">Total</th>
+                                    <th class="text-white">Diskon</th>
+                                    <th class="text-white">PPN (11%)</th>
+                                    <th class="text-white">Grand Total</th>
+                                    <th class="text-white">Status</th>
+                                    <th class="text-white">Aksi</th>    
                                 </tr>
                             </thead>
                             <tbody>

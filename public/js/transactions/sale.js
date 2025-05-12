@@ -100,27 +100,32 @@ document.addEventListener("DOMContentLoaded", function () {
                 cartItem.classList.add("cart-item", "mb-3");
                 cartItem.innerHTML = `
         <div class="col-12">
-            <div class="card cart-product-card w-100" style="height: 400px;">
+            <div class="card cart-product-card w-100" style="height: 450px;">
                 <img src="http://localhost:8000/storage/images/${productImage}" class="card-img-top" alt="${productName}" style="max-height: 150px; object-fit: cover;">
                 <div class="card-body">
                     <h5 class="card-title">${productName}</h5>
 
-                    <!-- ID produk (penting untuk validasi Laravel) -->
                     <input type="hidden" name="products[${cartProductsContainer.children.length}][id]" value="${productId}">
                     
-                    <!-- Input untuk quantity (satu-satunya input quantity yang digunakan) -->
-                    <input type="number" name="products[${cartProductsContainer.children.length}][quantity]" class="form-control quantity" value="1" min="1" required oninput="calculateTotal()">
 
                     <p class="card-text">Harga: Rp ${productPrice}</p>
                     <div class="d-flex flex-column justify-content-between align-items-start">
                         <div class="mb-3 w-100">
                             <div class="d-flex justify-content-between align-items-center">
-                                <label for="quantity-${cartProductsContainer.children.length}" class="quantity-label">Jumlah:</label>
                                 <button type="button" class="btn btn-sm btn-secondary quantity-minus">-</button>
+                                <input type="number" 
+                                    name="products[${cartProductsContainer.children.length}][quantity]" 
+                                    class="form-control form-control-sm quantity text-center" 
+                                    value="1" 
+                                    min="1" 
+                                    readonly 
+                                    required 
+                                    oninput="calculateTotal()">
                                 <button type="button" class="btn btn-sm btn-secondary quantity-plus">+</button>
                             </div>
                         </div>
                         <div class="mb-3 w-100">
+                            <label class="form-label">Harga Produk</label>
                             <input type="number" name="products[${cartProductsContainer.children.length}][price]" class="form-control selling-price" value="${productPrice}" required oninput="calculateTotal()">
                         </div>
                         <div class="mb-3 w-100">
