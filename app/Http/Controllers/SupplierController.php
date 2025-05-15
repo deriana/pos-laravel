@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
+use App\Models\Supplier;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -12,16 +12,8 @@ class SupplierController extends Controller
      */
     public function index()
     {
-        $categories = Categories::all();
-        return view('Customers.index', compact('categories'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $suppliers = Supplier::all();
+        return view('Suppliers.index', compact('suppliers'));
     }
 
     /**
@@ -29,23 +21,18 @@ class SupplierController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'phone_number' => 'required|string|max:255',
+                'email' => 'required|email|',
+                'address' => 'required'
+            ]
+        );
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        Supplier::create($request->all());
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil ditambahkan');
     }
 
     /**
@@ -53,14 +40,29 @@ class SupplierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'phone_number' => 'required|string|max:255',
+                'email' => 'required|email|',
+                'address' => 'required'
+            ]
+        );
+
+        $supplier = Supplier::findOrFail($id);
+        $supplier->update($request->all());
+
+        return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $supplier = Supplier::findOrFail($id);
+        $supplier->delete();
+
+        return redirect()->route('suppliers.index')->with('success', 'Supplier berhasil dihapus');
     }
 }

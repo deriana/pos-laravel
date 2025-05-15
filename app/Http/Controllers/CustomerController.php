@@ -3,25 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+ public function index()
     {
-        $categories = Categories::all();
-        return view('Suppliers.index', compact('categories'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $customers = Customer::all();
+        return view('Customers.index', compact('customers'));
     }
 
     /**
@@ -29,23 +19,18 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'phone_number' => 'required|string|max:255',
+                'email' => 'required|email|',
+                'address' => 'required'
+            ]
+        );
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        Customer::create($request->all());
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return redirect()->route('customers.index')->with('success', 'Customer berhasil ditambahkan');
     }
 
     /**
@@ -53,14 +38,29 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'phone_number' => 'required|string|max:255',
+                'email' => 'required|email|',
+                'address' => 'required'
+            ]
+        );
+
+        $customers = Customer::findOrFail($id);
+        $customers->update($request->all());
+
+        return redirect()->route('customers.index')->with('success', 'Customer berhasil diupdate');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+        $customer->delete();
+
+        return redirect()->route('customers.index')->with('success', 'customer berhasil dihapus');
     }
 }

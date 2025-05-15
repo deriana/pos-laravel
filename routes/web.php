@@ -47,11 +47,12 @@ Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(func
     Route::resource('/users', UserController::class);
 
     Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/sales', fn() => view('reports.sales'))->name('sales');
-        Route::get('/purchases', fn() => view('reports.purchases'))->name('purchases');
-        Route::get('/inventory', fn() => view('reports.inventory'))->name('inventory');
-        Route::get('/customers', fn() => view('reports.customers'))->name('customers');
-        Route::get('/suppliers', fn() => view('reports.suppliers'))->name('suppliers');
+        Route::get('/sales', fn() => view('Reports.sales'))->name('sales');
+        Route::get('/purchases', fn() => view('Reports.purchases'))->name('purchases');
+        Route::get('/inventory', fn() => view('Reports.inventory'))->name('inventory');
+        Route::get('/customers', fn() => view('Reports.customers'))->name('customers');
+        Route::get('/suppliers', fn() => view('Reports.suppliers'))->name('suppliers');
+        Route::get('/profit', fn() => view('Reports.profit'))->name('profit');
     });
 });
 

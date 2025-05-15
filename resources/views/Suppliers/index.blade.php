@@ -3,10 +3,12 @@
 @section('content')
     <div class="content-wrapper">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1>Categories</h1>
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">Tambah
-                Kategori</button>
+            <h1>Suppliers</h1>
+            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
+                Tambah Supplier
+            </button>
         </div>
+
 
         @if (session()->has('success'))
             <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -25,30 +27,38 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Nama Kategori</th>
-                        <th>Deskripsi</th>
-                        <th>Aksi</th>
+                        <th>Name</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Address</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($categories as $category)
+                    @foreach ($suppliers as $supplier)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
-                            <td>{{ $category->name }}</td>
-                            <td>{{ $category->description }}</td>
+                            <td>{{ $supplier->name }}</td>
+                            <td>{{ $supplier->phone_number }}</td>
+                            <td>{{ $supplier->email }}</td>
+                            <td>{{ $supplier->address }}</td>
                             <td>
-                                <!-- Edit Kategori Button -->
-                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-                                    data-id="{{ $category->id }}" data-name="{{ $category->name }}">Edit</button>
+                                <!-- Edit Supplier Button -->
+                                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editSupplierModal"
+                                    data-id="{{ $supplier->id }}" data-name="{{ $supplier->name }}"
+                                    data-phone="{{ $supplier->phone_number }}" data-email="{{ $supplier->email }}"
+                                    data-address="{{ $supplier->address }}">
+                                    Edit
+                                </button>
 
-                                <!-- Delete Kategori Button -->
-                                <form id="deleteForm{{ $category->id }}"
-                                    action="{{ route('categories.destroy', $category->id) }}" method="POST"
+                                <!-- Delete Supplier Button -->
+                                <form id="deleteForm{{ $supplier->id }}"
+                                    action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST"
                                     style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="button" class="btn btn-danger"
-                                        onclick="confirmDelete({{ $category->id }})">Hapus</button>
+                                        onclick="confirmDelete({{ $supplier->id }})">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -56,26 +66,35 @@
                 </tbody>
             </table>
         </div>
+
     </div>
 
-    <!-- Add Category Modal -->
-    <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
+    <!-- Add Supplier Modal -->
+    <div class="modal fade" id="addSupplierModal" tabindex="-1" aria-labelledby="addSupplierModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addCategoryModalLabel">Tambah Kategori</h5>
+                    <h5 class="modal-title" id="addSupplierModalLabel">Tambah Supplier</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('categories.store') }}" method="POST">
+                    <form action="{{ route('suppliers.store') }}" method="POST">
                         @csrf
                         <div class="mb-3">
-                            <label for="name" class="form-label">Nama Kategori</label>
+                            <label for="name" class="form-label">Nama Supplier</label>
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="description" class="form-label">Deskripsi</label>
-                            <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                            <label for="phone" class="form-label">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="phone" name="phone_number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="address" name="address" rows="3"></textarea>
                         </div>
                         <button type="submit" class="btn btn-primary">Tambah</button>
                     </form>
@@ -84,26 +103,34 @@
         </div>
     </div>
 
-    <!-- Edit Category Modal -->
-    <div class="modal fade" id="editCategoryModal" tabindex="-1" aria-labelledby="editCategoryModalLabel"
+    <!-- Edit Supplier Modal -->
+    <div class="modal fade" id="editSupplierModal" tabindex="-1" aria-labelledby="editSupplierModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editCategoryModalLabel">Edit Kategori</h5>
+                    <h5 class="modal-title" id="editSupplierModalLabel">Edit Supplier</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="editCategoryForm" method="POST">
+                    <form id="editSupplierForm" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-3">
-                            <label for="editName" class="form-label">Nama Kategori</label>
+                            <label for="editName" class="form-label">Nama Supplier</label>
                             <input type="text" class="form-control" id="editName" name="name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="editDescription" class="form-label">Deskripsi</label>
-                            <textarea class="form-control" id="editDescription" name="description" rows="3"></textarea>
+                            <label for="editPhone" class="form-label">Nomor Telepon</label>
+                            <input type="text" class="form-control" id="editPhone" name="phone_number" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="editEmail" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editAddress" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="editAddress" name="address" rows="3"></textarea>
                         </div>
                         <button type="submit" class="btn btn-warning">Simpan Perubahan</button>
                     </form>
@@ -134,17 +161,23 @@
         }
 
         // Mengisi form edit dengan data kategori yang dipilih
-        var editCategoryModal = document.getElementById('editCategoryModal')
-        editCategoryModal.addEventListener('show.bs.modal', function(event) {
+        var editSupplierModal = document.getElementById('editSupplierModal')
+        editSupplierModal.addEventListener('show.bs.modal', function(event) {
             var button = event.relatedTarget; // Tombol Edit
-            var categoryId = button.getAttribute('data-id');
-            var categoryName = button.getAttribute('data-name');
+            var supplierId = button.getAttribute('data-id');
+            var supplierName = button.getAttribute('data-name');
+            var supplierPhone = button.getAttribute('data-phone');
+            var supplierEmail = button.getAttribute('data-email');
+            var supplierAddress = button.getAttribute('data-address');
 
             // Isi form edit dengan data
-            var form = document.getElementById('editCategoryForm');
-            form.action = '/categories/' + categoryId; // Update action form
-            document.getElementById('editName').value = categoryName;
-            document.getElementById('editDescription').value = ''; // Reset deskripsi, jika diperlukan
+            var form = document.getElementById('editSupplierForm');
+            form.action = '/suppliers/' + supplierId; // Update action form
+
+            document.getElementById('editName').value = supplierName;
+            document.getElementById('editPhone').value = supplierPhone;
+            document.getElementById('editEmail').value = supplierEmail;
+            document.getElementById('editAddress').value = supplierAddress;
         });
     </script>
 @endsection

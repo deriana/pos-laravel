@@ -109,61 +109,72 @@
                 <ul class="menu-inner py-1">
 
                     <!-- Dashboard -->
+                    <!-- Dashboard (Paling penting & utama) -->
                     <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <a href="{{ route('dashboard') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-grid-alt"></i>
-                            <div data-i18n="Analytics">Dashboard</div>
+                            <div data-i18n="Dashboard">Dashboard</div>
                         </a>
                     </li>
+
+                    <!-- Master Data (Data utama dan sering digunakan) -->
+                    <li class="menu-header">Master Data</li>
 
                     <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
                         <a href="{{ route('products.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-cube"></i>
-                            <div data-i18n="Analytics">Products</div>
+                            <div data-i18n="Products">Products</div>
                         </a>
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
                         <a href="{{ route('categories.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-category"></i>
-                            <div data-i18n="Analytics">Categories</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
-                        <a href="{{ route('purchases.create') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-cart"></i>
-                            <div data-i18n="Analytics">Add Product From Suppliers</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
-                        <a href="{{ route('sales.create') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-cart"></i>
-                            <div data-i18n="Analytics">Cashiers</div>
+                            <div data-i18n="Categories">Categories</div>
                         </a>
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
                         <a href="{{ route('suppliers.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-store-alt"></i>
-                            <div data-i18n="Analytics">Supplier</div>
+                            <div data-i18n="Suppliers">Suppliers</div>
                         </a>
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
                         <a href="{{ route('customers.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user"></i>
-                            <div data-i18n="Analytics">Customers</div>
+                            <div data-i18n="Customers">Customers</div>
                         </a>
                     </li>
+
+                    <!-- Transaksi (Operasi harian penting) -->
+                    <li class="menu-header">Transaksi</li>
+
+                    <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.create') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cart"></i>
+                            <div data-i18n="Purchases">Add Product From Suppliers</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
+                        <a href="{{ route('sales.create') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cart"></i>
+                            <div data-i18n="Sales">Cashiers</div>
+                        </a>
+                    </li>
+
+                    <!-- Management (Admin level) -->
+                    <li class="menu-header">Management</li>
 
                     <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                         <a href="{{ route('users.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user-check"></i>
-                            <div data-i18n="Analytics">Management Users</div>
+                            <div data-i18n="Users">Management Users</div>
                         </a>
                     </li>
+
                     <!-- Reports Group -->
                     <li class="menu-header small text-uppercase">
                         <span class="menu-header-text">Reports</span>
@@ -201,6 +212,13 @@
                         <a href="{{ route('reports.suppliers') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-store"></i>
                             <div data-i18n="Supplier Report">Supplier Report</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('reports.profit') ? 'active' : '' }}">
+                        <a href="{{ route('reports.profit') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-store"></i>
+                            <div data-i18n="Supplier Report">Profit Report</div>
                         </a>
                     </li>
 
