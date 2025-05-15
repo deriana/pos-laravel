@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -14,8 +15,8 @@ class UserController extends Controller
      */
     public function index()
     {
-    
-        $users = User::all();
+
+        $users = User::where('id', '!=', Auth::id())->get();
         return view('Users.index', compact('users'));
     }
 

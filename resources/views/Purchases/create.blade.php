@@ -19,11 +19,14 @@
                 </ul>
             </div>
         @endif --}}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-4">Form Pembelian</h2>
+            <button id="toggleSidebarBtn" class="btn btn-primary mb-3">Sembunyikan Sidebar</button>
+        </div>
 
-        <h2 class="mb-4">Form Pembelian</h2>
         <div class="row">
             <!-- Sisi Kiri - List Produk -->
-            <div class="col-md-6">
+            <div class="col-md-6" id="mainContent">
                 <div class="mb-4">
                     <label for="search_product" class="form-label fw-semibold">Cari Produk</label>
                     <input type="text" id="search_product" class="form-control shadow-sm" placeholder="Cari produk...">
@@ -57,13 +60,13 @@
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    @endforeach
+                            </div>
+                        @endforeach
                 </div>
             </div>
 
             <!-- Sisi Kanan - Form Transaksi -->
-            <div class="col-md-6">
+            <div class="col-md-6 card p-4" id="sidebar">
                 <form action="{{ route('purchases.store') }}" method="POST">
                     @csrf
 
@@ -117,7 +120,8 @@
 
                     <div class="mb-4">
                         <label for="payment_date" class="form-label fw-semibold">Tanggal Pembayaran</label>
-                        <input type="date" name="payment_date" class="form-control" id="payment_date" value="now">
+                        <input type="date" name="payment_date" class="form-control" id="payment_date"
+                            value="now">
                     </div>
 
                     <div class="mb-4">
@@ -150,5 +154,32 @@
 
     @push('script')
         <script src="{{ asset('js/transactions/purchase.js') }}"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const toggleBtn = document.getElementById('toggleSidebarBtn');
+                    const sidebar = document.getElementById('sidebar');
+                    const mainContent = document.getElementById('mainContent');
+
+                    toggleBtn.addEventListener('click', function() {
+                        if (sidebar.style.display === 'none') {
+                            // Show sidebar
+                            sidebar.style.display = 'block';
+                            // Ubah mainContent kembali ke col-md-8
+                            mainContent.classList.remove('col-md-12');
+                            mainContent.classList.add('col-md-6');
+
+                            toggleBtn.textContent = 'Sembunyikan Sidebar';
+                        } else {
+                            // Hide sidebar
+                            sidebar.style.display = 'none';
+                            // Buat mainContent full width col-md-12
+                            mainContent.classList.remove('col-md-6');
+                            mainContent.classList.add('col-md-12');
+
+                            toggleBtn.textContent = 'Tampilkan Sidebar';
+                        }
+                    });
+                });
+            </script>
     @endpush
 @endsection

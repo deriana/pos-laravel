@@ -27,7 +27,7 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>AUTH | WARUNG SUNDA</title>
+    <title>AUTH | {{ env('APP_NAME') }}</title>
 
     <meta name="description" content="" />
 
