@@ -14,7 +14,7 @@ use App\Http\Middleware\CheckAuthenticated;
 use App\Http\Middleware\CheckVerified;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(function () {
+Route::middleware([CheckAuthenticated::class])->group(function () {
     Route::get('/', function () {
         return view('Dashboard.index');
     })->name('dashboard');
@@ -45,6 +45,8 @@ Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(func
     Route::resource('/suppliers', SupplierController::class);
     Route::resource('/customers', CustomerController::class);
     Route::resource('/users', UserController::class);
+
+    Route::put('/users/{id}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
 
     Route::prefix('reports')->name('reports.')->group(function () {
         Route::get('/sales', fn() => view('Reports.sales'))->name('sales');

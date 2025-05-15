@@ -49,7 +49,7 @@ class AuthController extends Controller
 
     public function showOtpForm()
     {
-        return view('auth.otp');
+        return view('Auth.otp');
     }
 
     public function verifyOtp(Request $request)
