@@ -6,8 +6,11 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\ProfitReportController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseReportController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\SupplierController;
@@ -51,11 +54,13 @@ Route::middleware([CheckAuthenticated::class])->group(function () {
     Route::prefix('reports')->name('reports.')->group(function () {
         Route::get('/sales', [SalesReportController::class, 'index'])->name('sales');
         Route::get('/sales/export', [SalesReportController::class, 'export'])->name('sales.export');
-        Route::get('/purchases', fn() => view('Reports.purchases'))->name('purchases');
-        Route::get('/inventory', fn() => view('Reports.inventory'))->name('inventory');
+        Route::get('/purchases', [PurchaseReportController::class, 'index'])->name('purchases');
+        Route::get('/purchases/export', [PurchaseReportController::class, 'export'])->name('purchase.export');
+        Route::get('/inventory', [InventoryReportController::class, 'index'])->name('inventory');
         Route::get('/customers', fn() => view('Reports.customers'))->name('customers');
         Route::get('/suppliers', fn() => view('Reports.suppliers'))->name('suppliers');
-        Route::get('/profit', fn() => view('Reports.profit'))->name('profit');
+        Route::get('/profit', [ProfitReportController::class, 'index'])->name('profit');
+        Route::get('/profit/export', [ProfitReportController::class, 'export'])->name('profit.export');
     });
 });
 

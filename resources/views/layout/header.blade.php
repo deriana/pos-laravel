@@ -172,7 +172,7 @@
                         </a>
                     </li>
 
-                    <li class="menu-item {{ request()->routeIs('reports.customers') ? 'active' : '' }}">
+                    {{-- <li class="menu-item {{ request()->routeIs('reports.customers') ? 'active' : '' }}">
                         <a href="{{ route('reports.customers') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-user-voice"></i>
                             <div data-i18n="Customer Report">Customer Report</div>
@@ -184,7 +184,7 @@
                             <i class="menu-icon tf-icons bx bx-store"></i>
                             <div data-i18n="Supplier Report">Supplier Report</div>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="menu-item {{ request()->routeIs('reports.profit') ? 'active' : '' }}">
                         <a href="{{ route('reports.profit') }}" class="menu-link">
