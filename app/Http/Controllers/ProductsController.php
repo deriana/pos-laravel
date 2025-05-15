@@ -16,7 +16,7 @@ class ProductsController extends Controller
     {
         $categories = Categories::all();
 
-        $query = Products::query()->with(['qrCode']);
+        $query = Products::query();
 
         // Jika ada query pencarian nama produk
         if ($request->has('search') && $request->search != '') {
@@ -29,7 +29,7 @@ class ProductsController extends Controller
         }
 
         // Memuat relasi 'category' dengan eager loading
-        $products = $query->with('category')->paginate(6); // Ubah 'categories' menjadi 'category'
+        $products = $query->with('category', 'qrCode')->paginate(6); // Ubah 'categories' menjadi 'category'
 
         return view('Products.index', compact('products', 'categories'));
     }

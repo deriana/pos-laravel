@@ -16,18 +16,17 @@ use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckAuthenticated;
+use App\Http\Middleware\CheckRole;
 use App\Http\Middleware\CheckVerified;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([CheckAuthenticated::class])->group(function () {
     Route::get('/', [DashboardController::class, 'showDashboard'])->name('dashboard');
 
-
     Route::fallback(function () {
         return view('error.not-found');
     });
 
-    Route::resource('/products', ProductsController::class);
     Route::get('storage/images/{filename}', [ImageController::class, 'showImage']);
     Route::get('storage/qr/{filename}', [ImageController::class, 'showQrCode']);
     Route::resource('/categories', CategoriesController::class);
@@ -35,32 +34,38 @@ Route::middleware([CheckAuthenticated::class])->group(function () {
     Route::post('/edit-profile', [AuthController::class, 'updateProfile'])->name('auth.updateProfile');
     Route::put('/edit-profile', [AuthController::class, 'updateProfileData'])->name('auth.updateProfile');
     Route::get('/change-email', [AuthController::class, 'showChangeEmailForm'])->name('auth.changeEmail');
+
     Route::post('/change-email', [AuthController::class, 'changeEmail'])->name('auth.changeEmailPost');
-    Route::resource('/purchases', PurchaseController::class);
-    Route::resource('/sales', SaleController::class);
     Route::get('sales/{id}/receipt', [SaleController::class, 'showReceipt'])->name('sales.receipt');
     Route::get('/sales/receipt-view/{id}', [SaleController::class, 'viewReceipt'])->name('sales.receipt.view');
     Route::post('/sale/{id}/pay-debt', [SaleController::class, 'payDebt'])->name('sale.pay.debt');
+
     Route::get('purchases/{id}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.receipt');
     Route::get('/purchases/receipt-view/{id}', [PurchaseController::class, 'viewReceipt'])->name('purchases.receipt.view');
     Route::post('/purchase/{id}/pay-debt', [PurchaseController::class, 'payDebt'])->name('purchase.pay.debt');
     // Route::post('/checkout', [CartController::class, 'store'])->name('cart.store');
-    Route::resource('/suppliers', SupplierController::class);
-    Route::resource('/customers', CustomerController::class);
-    Route::resource('/users', UserController::class);
+    Route::resource('/sales', SaleController::class);
+    Route::resource('/purchases', PurchaseController::class);
+    
+    Route::middleware([CheckRole::class])->group(function () {
+        Route::resource('/suppliers', SupplierController::class);
+        Route::resource('/customers', CustomerController::class);
+        Route::resource('/users', UserController::class);
+        Route::resource('/products', ProductsController::class);
 
-    Route::put('/users/{id}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
+        Route::put('/users/{id}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
 
-    Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/sales', [SalesReportController::class, 'index'])->name('sales');
-        Route::get('/sales/export', [SalesReportController::class, 'export'])->name('sales.export');
-        Route::get('/purchases', [PurchaseReportController::class, 'index'])->name('purchases');
-        Route::get('/purchases/export', [PurchaseReportController::class, 'export'])->name('purchase.export');
-        Route::get('/inventory', [InventoryReportController::class, 'index'])->name('inventory');
-        Route::get('/customers', fn() => view('Reports.customers'))->name('customers');
-        Route::get('/suppliers', fn() => view('Reports.suppliers'))->name('suppliers');
-        Route::get('/profit', [ProfitReportController::class, 'index'])->name('profit');
-        Route::get('/profit/export', [ProfitReportController::class, 'export'])->name('profit.export');
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/sales', [SalesReportController::class, 'index'])->name('sales');
+            Route::get('/sales/export', [SalesReportController::class, 'export'])->name('sales.export');
+            Route::get('/purchases', [PurchaseReportController::class, 'index'])->name('purchases');
+            Route::get('/purchases/export', [PurchaseReportController::class, 'export'])->name('purchase.export');
+            Route::get('/inventory', [InventoryReportController::class, 'index'])->name('inventory');
+            // Route::get('/customers', fn() => view('Reports.customers'))->name('customers');
+            // Route::get('/suppliers', fn() => view('Reports.suppliers'))->name('suppliers');
+            Route::get('/profit', [ProfitReportController::class, 'index'])->name('profit');
+            Route::get('/profit/export', [ProfitReportController::class, 'export'])->name('profit.export');
+        });
     });
 });
 

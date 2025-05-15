@@ -53,11 +53,17 @@
                                     <p class="card-category">{{ $product->category->name }}</p>
                                     <p class="card-stock">Stock {{ $product->stock }} {{ $product->unit }}</p>
                                     <p class="card-text">Rp {{ number_format($product->purchase_price, 2, ',', '.') }}</p>
-                                    <button class="btn btn-primary btn-sm add-to-cart" data-id="{{ $product->id }}"
-                                        data-name="{{ $product->name }}" data-price="{{ $product->purchase_price }}"
-                                        data-stock="{{ $product->stock }}" data-image="{{ $product->product_image }}">
-                                        Tambah ke Keranjang
-                                    </button>
+                                    @if ($product->stock > 0)
+                                        <button class="btn btn-primary btn-sm add-to-cart" data-id="{{ $product->id }}"
+                                            data-name="{{ $product->name }}" data-price="{{ $product->purchase_price }}"
+                                            data-stock="{{ $product->stock }}" data-image="{{ $product->product_image }}">
+                                            Tambah ke Keranjang
+                                        </button>
+                                    @else
+                                        <button class="btn btn-secondary btn-sm" disabled>
+                                            Stok Habis
+                                        </button>
+                                    @endif
                                 </div>
                             </div>
                         </div>
