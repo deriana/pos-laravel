@@ -4,10 +4,12 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckAuthenticated;
@@ -15,9 +17,7 @@ use App\Http\Middleware\CheckVerified;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([CheckAuthenticated::class])->group(function () {
-    Route::get('/', function () {
-        return view('Dashboard.index');
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'showDashboard'])->name('dashboard');
 
 
     Route::fallback(function () {
@@ -49,7 +49,8 @@ Route::middleware([CheckAuthenticated::class])->group(function () {
     Route::put('/users/{id}/change-password', [UserController::class, 'changePassword'])->name('users.change-password');
 
     Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/sales', fn() => view('Reports.sales'))->name('sales');
+        Route::get('/sales', [SalesReportController::class, 'index'])->name('sales');
+        Route::get('/sales/export', [SalesReportController::class, 'export'])->name('sales.export');
         Route::get('/purchases', fn() => view('Reports.purchases'))->name('purchases');
         Route::get('/inventory', fn() => view('Reports.inventory'))->name('inventory');
         Route::get('/customers', fn() => view('Reports.customers'))->name('customers');
