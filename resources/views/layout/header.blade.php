@@ -54,7 +54,7 @@
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
                     <a href="{{ route('dashboard') }}" class="app-brand-link">
-                      
+
                         <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ env('APP_NAME') }}</span>
                     </a>
 
@@ -108,10 +108,24 @@
                     <!-- Transaksi (Operasi harian penting) -->
                     <li class="menu-header">Transaksi</li>
 
+                    <li class="menu-item {{ request()->routeIs('purchases.index') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                            <div data-i18n="Purchases Index">List Purchases</div>
+                        </a>
+                    </li>
+
                     <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
                         <a href="{{ route('purchases.create') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-cart"></i>
                             <div data-i18n="Purchases">Add Product From Suppliers</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('sales.index') ? 'active' : '' }}">
+                        <a href="{{ route('sales.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                            <div data-i18n="Sales Index">List Sales</div>
                         </a>
                     </li>
 

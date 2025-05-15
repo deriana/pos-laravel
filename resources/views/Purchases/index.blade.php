@@ -89,7 +89,7 @@
                                             </button>
                                             <a href="{{ route('purchases.receipt', $purchase->id) }}"
                                                 class="btn btn-outline-success btn-sm">
-                                                <i class="bi bi-file-earmark-pdf"></i> PDF
+                                                <i class="bi bi-file-earmark-pdf"></i> View Invoice
                                             </a>
                                         </td>
                                     </tr>

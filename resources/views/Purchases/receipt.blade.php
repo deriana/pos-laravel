@@ -1,135 +1,222 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struk Pembelian</title>
+    <meta charset="utf-8" />
+    <title>{{ env('APP_NAME') }} | Invoice</title>
+
     <style>
-        body {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            margin: 0;
-            padding: 0;
-        }
-        .receipt {
-            width: 260px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-        .receipt-header {
-            text-align: center;
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
             font-size: 16px;
-            font-weight: bold;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
         }
-        .receipt-header p {
-            margin: 0;
-        }
-        .line {
-            border-top: 1px dashed #000;
-            margin: 10px 0;
-        }
-        .table {
+
+        .invoice-box table {
             width: 100%;
-            margin-bottom: 10px;
-        }
-        .table th, .table td {
-            padding: 5px 0;
+            line-height: inherit;
             text-align: left;
         }
-        .table th {
-            font-weight: normal;
+
+        .invoice-box table td {
+            padding: 5px;
+            vertical-align: top;
         }
-        .table td {
+
+        .invoice-box table tr td:nth-child(2) {
             text-align: right;
         }
-        .table td.product {
-            text-align: left;
+
+        .invoice-box table tr.top table td {
+            padding-bottom: 20px;
         }
-        .total {
+
+        .invoice-box table tr.top table td.title {
+            font-size: 45px;
+            line-height: 45px;
+            color: #333;
+        }
+
+        .invoice-box table tr.information table td {
+            padding-bottom: 40px;
+        }
+
+        .invoice-box table tr.heading td {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
             font-weight: bold;
         }
-        .footer {
-            text-align: center;
-            font-size: 12px;
-            margin-top: 10px;
+
+        .invoice-box table tr.details td {
+            padding-bottom: 20px;
+        }
+
+        .invoice-box table tr.item td {
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-box table tr.item.last td {
+            border-bottom: none;
+        }
+
+        .invoice-box table tr.total td:nth-child(2) {
+            border-top: 2px solid #eee;
+            font-weight: bold;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .invoice-box table tr.top table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+
+            .invoice-box table tr.information table td {
+                width: 100%;
+                display: block;
+                text-align: center;
+            }
+        }
+
+        /** RTL **/
+        .invoice-box.rtl {
+            direction: rtl;
+            font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+        }
+
+        .invoice-box.rtl table {
+            text-align: right;
+        }
+
+        .invoice-box.rtl table tr td:nth-child(2) {
+            text-align: left;
         }
     </style>
 </head>
+
 <body>
-    <div class="receipt">
-        <div class="receipt-header">
-            <p>STORE NAME</p>
-            <p>STRUK PEMBELIAN</p>
-            <p><strong>Invoice No:</strong> {{ $purchase->invoice_number }}</p>
-            <p><strong>Supplier:</strong> {{ $purchase->supplier->name }}</p>
-            <p><strong>Tanggal:</strong> {{ $purchase->sale_date->format('d M Y') }}</p>
-        </div>
+    @php
+        $path = public_path('image.jpeg');
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+    @endphp
 
-        <div class="line"></div>
+    <div class="invoice-box" style="font-family: Arial, sans-serif; max-width: 800px; margin: auto;">
+        <table cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+            <tr class="top">
+                <td colspan="2" style="padding: 10px 0;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td class="title" style="width: 50%;">
+                                <img src="{{ $base64 }}" style="width: 100%; max-width: 300px;" alt="Logo" />
+                            </td>
 
-        <h5>Detail Pembelian:</h5>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="product">Produk</th>
-                    <th>Qty</th>
-                    <th>Harga</th>
-                    <th>Subtotal</th>
+                            <td style="text-align: right;">
+                                Invoice #: {{ $purchase->invoice_number }}<br />
+                                Created: {{ $purchase->sale_date->format('d M Y') }}<br />
+                                Due: {{ $purchase->sale_date->copy()->addMonth()->format('d M Y') }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="information">
+                <td colspan="2" style="padding: 10px 0;">
+                    <table style="width: 100%;">
+                        <tr>
+                            <td style="width: 50%;">
+                                {{ $purchase->supplier->name ?? '-' }}<br />
+                                {{ $purchase->supplier->address ?? '-' }}<br />
+                                {{ $purchase->supplier->phone_number ?? '-' }}
+                            </td>
+
+                            <td style="text-align: right; width: 50%;">
+                                {{ $purchase->user->name ?? 'Unknown User' }}<br />
+                                {{ $purchase->user->email ?? '-' }}
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+
+            <tr class="heading" style="background: #eee; border-bottom: 1px solid #ddd;">
+                <td style="padding: 5px;">Payment Method</td>
+                <td style="padding: 5px; text-align: right;">Amount Paid</td>
+            </tr>
+
+            <tr class="details">
+                <td style="padding: 5px;">{{ ucfirst($purchase->payment_status) }}</td>
+                <td style="padding: 5px; text-align: right;">
+                    @php
+                        $totalPaid = $purchase->payments->sum('amount');
+                    @endphp
+                    Rp {{ number_format($totalPaid, 2, ',', '.') }}
+                </td>
+            </tr>
+
+            <tr class="heading" style="background: #eee; border-bottom: 1px solid #ddd; margin-top: 20px;">
+                <td style="padding: 5px;">Item</td>
+                <td style="padding: 5px; text-align: right;">Price</td>
+            </tr>
+
+            @foreach ($purchase->purchaseItems as $item)
+                <tr class="item">
+                    <td style="padding: 5px;">
+                        {{ $item->product->name ?? 'Produk tidak ditemukan' }}<br>
+                        <small>Qty: {{ $item->quantity }} {{ $item->product->unit ?? '' }}</small>
+                    </td>
+                    <td style="padding: 5px; text-align: right;">
+                        Rp {{ number_format($item->subtotal, 2, ',', '.') }}
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($purchase->purchaseItems as $item)
+            @endforeach
+
+            <tr class="total" style="font-weight: bold; border-top: 2px solid #333;">
+                <td style="padding: 5px; text-align: right;">Subtotal:</td>
+                <td style="padding: 5px; text-align: right;">
+                    Rp {{ number_format($purchase->total, 2, ',', '.') }}
+                </td>
+            </tr>
+
+            <tr class="total" style="font-weight: bold;">
+                <td style="padding: 5px; text-align: right;">Diskon ({{ $purchase->discount }}%):</td>
+                <td style="padding: 5px; text-align: right;">
+                    - Rp {{ number_format(($purchase->total * $purchase->discount) / 100, 2, ',', '.') }}
+                </td>
+            </tr>
+
+            <tr class="total" style="font-weight: bold;">
+                <td style="padding: 5px; text-align: right;">Pajak ({{ $purchase->tax }}%):</td>
+                <td style="padding: 5px; text-align: right;">
+                    Rp {{ number_format(($purchase->total * $purchase->tax) / 100, 2, ',', '.') }}
+                </td>
+            </tr>
+
+            <tr class="total" style="font-weight: bold; border-top: 2px solid #333;">
+                <td style="padding: 5px; text-align: right;">Grand Total:</td>
+                <td style="padding: 5px; text-align: right;">
+                    Rp {{ number_format($purchase->grand_total, 2, ',', '.') }}
+                </td>
+            </tr>
+
+            @if ($purchase->note)
                 <tr>
-                    <td class="product">{{ $item->product->name ?? 'Produk Terhapus' }}</td>
-                    <td>{{ $item->quantity }}</td>
-                    <td>Rp{{ number_format($item->price, 0, ',', '.') }}</td>
-                    <td>Rp{{ number_format($item->subtotal, 0, ',', '.') }}</td>
+                    <td colspan="2" style="padding: 10px; font-style: italic;">
+                        Catatan: {{ $purchase->note }}
+                    </td>
                 </tr>
-                @endforeach
-            </tbody>
+            @endif
         </table>
-
-        <div class="line"></div>
-
-        <h5>Pembayaran:</h5>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Metode</th>
-                    <th>Jumlah</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($purchase->payments as $payment)
-                <tr>
-                    <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
-                    <td>{{ ucfirst($payment->payment_method) }}</td>
-                    <td>Rp{{ number_format($payment->amount, 0, ',', '.') }}</td>
-                </tr>
-                @empty
-                <tr><td colspan="3">Belum ada pembayaran</td></tr>
-                @endforelse
-            </tbody>
-        </table>
-
-        <div class="line"></div>
-
-        <div class="total">
-            <p><strong>Total:</strong> Rp{{ number_format($purchase->total, 0, ',', '.') }}</p>
-            <p><strong>Diskon:</strong> Rp{{ number_format($purchase->discount, 0, ',', '.') }}</p>
-            <p><strong>PPN (11%):</strong> Rp{{ number_format($purchase->tax, 0, ',', '.') }}</p>
-            <p><strong>Grand Total:</strong> Rp{{ number_format($purchase->grand_total, 0, ',', '.') }}</p>
-        </div>
-
-        <div class="footer">
-            <p><em>Terima kasih atas pembelian Anda!</em></p>
-        </div>
     </div>
+
 </body>
+
 </html>
-<script>
-    window.onload = function() {
-        window.print(); // Memanggil fungsi print setelah halaman sepenuhnya dimuat
-    };
-</script>

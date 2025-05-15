@@ -1,146 +1,154 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Struk Pembelian</title>
+    <meta charset="utf-8" />
+    <title>Receipt - {{ $sales->invoice_number }}</title>
     <style>
         body {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            margin: 0;
-            padding: 0;
-        }
-
-        .receipt {
-            width: 260px;
-            margin: 0 auto;
-            padding: 10px;
-        }
-
-        .receipt-header {
-            text-align: center;
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .receipt-header p {
-            margin: 0;
-        }
-
-        .line {
-            border-top: 1px dashed #000;
-            margin: 10px 0;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .table th,
-        .table td {
-            padding: 5px 0;
-            text-align: left;
-        }
-
-        .table th {
-            font-weight: normal;
-        }
-
-        .table td {
-            text-align: right;
-        }
-
-        .table td.product {
-            text-align: left;
-        }
-
-        .total {
-            font-weight: bold;
-        }
-
-        .footer {
-            text-align: center;
+            font-family: monospace;
             font-size: 12px;
-            margin-top: 10px;
+            padding: 20px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .items td {
+            padding: 4px 0;
+        }
+
+        .totals td {
+            font-weight: bold;
+            padding-top: 10px;
+        }
+
+        hr {
+            margin: 10px 0;
+            border-top: 1px dashed #000;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        .small {
+            font-size: 11px;
         }
     </style>
 </head>
 
 <body>
-    <div class="receipt">
-        <div class="receipt-header">
-            <p>STORE NAME</p>
-            <p>STRUK PEMBELIAN</p>
-            <p><strong>Invoice No:</strong> {{ $sales->invoice_number }}</p>
-            <p><strong>Supplier:</strong> {{ $sales->customers->name }}</p>
-            <p><strong>Tanggal:</strong> {{ $sales->sale_date->format('d M Y') }}</p>
-        </div>
+    <div class="center">
+        <strong>{{ env('APP_NAME') }}</strong><br>
+        {{ now()->format('d M Y H:i') }}
+    </div>
 
-        <div class="line"></div>
+    <hr>
 
-        <h5>Detail Pembelian:</h5>
-        <table class="table">
-            <thead>
+    <div>
+        Kasir : {{ $sales->user->name ?? '-' }} <br>
+        No. Invoice : {{ $sales->invoice_number }}<br>
+        Tanggal : {{ \Carbon\Carbon::parse($sales->sale_date)->format('d M Y') }}<br>
+        Supplier : {{ $sales->customer->name ?? 'Umum' }}<br>
+        Status : {{ ucfirst($sales->payment_status) }}
+    </div>
+
+    <hr>
+
+    <table class="items">
+        @foreach ($sales->items as $item)
+            <tr>
+                <td colspan="2">
+                    {{ $item->product->name ?? 'Produk' }}<br>
+                    <small>Qty: {{ $item->quantity }} x Rp {{ number_format($item->price, 0, ',', '.') }}</small>
+                </td>
+                <td style="text-align: right;">
+                    Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
+                </td>
+            </tr>
+        @endforeach
+    </table>
+
+    <hr>
+
+    <table class="totals">
+        <tr>
+            <td colspan="2">Diskon</td>
+            <td style="text-align: right;">Rp {{ number_format($sales->discount, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">PPN 11%</td>
+            <td style="text-align: right;">Rp {{ number_format($sales->tax, 0, ',', '.') }}</td>
+        </tr>
+        <tr>
+            <td colspan="2">Grand Total</td>
+            <td style="text-align: right;">Rp {{ number_format($sales->grand_total, 0, ',', '.') }}</td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <strong>Pembayaran:</strong>
+    <table class="small">
+        @forelse ($sales->payments as $payment)
+            <tr>
+                <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
+                <td>{{ ucfirst($payment->payment_methode) }}</td>
+                <td style="text-align: right;">Rp {{ number_format($payment->amount, 0, ',', '.') }} - Rp {{ number_format($sales->grand_total, 0, ',', '.') }}</td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="4">Belum ada pembayaran</td>
+            </tr>
+        @endforelse
+
+        @php
+            $totalPaid = $sales->payments->sum('amount');
+            $grandTotal = $sales->grand_total;
+            $change = $totalPaid - $grandTotal;
+        @endphp
+
+        @if ($change > 0)
+            <tr>
+                <td colspan="2"><strong>Kembalian</strong></td>
+                <td style="text-align: right;"><strong>Rp {{ number_format($change, 0, ',', '.') }}</strong></td>
+                <td></td>
+            </tr>
+        @endif
+    </table>
+
+
+    @if ($sales->accountsReceivable->isNotEmpty())
+        <hr>
+        <strong>Piutang:</strong><br>
+        @foreach ($sales->accountsReceivable as $account)
+            <table class="small">
                 <tr>
-                    <th class="product">Produk</th>
-                    <th>Qty</th>
-                    <th>Harga</th>
-                    <th>Subtotal</th>
+                    <td>Jatuh Tempo</td>
+                    <td>: {{ \Carbon\Carbon::parse($account->due_date)->format('d M Y') }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach ($sales->items as $item)
-                    <tr>
-                        <td class="product">{{ $item->product->name ?? 'Produk Terhapus' }}</td>
-                        <td>{{ $item->quantity }}</td>
-                        <td>Rp{{ number_format($item->price, 0, ',', '.') }}</td>
-                        <td>Rp{{ number_format($item->subtotal, 0, ',', '.') }}</td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-
-        <div class="line"></div>
-
-        <h5>Pembayaran:</h5>
-        <table class="table">
-            <thead>
                 <tr>
-                    <th>Tanggal</th>
-                    <th>Metode</th>
-                    <th>Jumlah</th>
+                    <td>Total Piutang</td>
+                    <td>: Rp {{ number_format($account->amount_due, 0, ',', '.') }}</td>
                 </tr>
-            </thead>
-            <tbody>
-                @forelse ($sales->payments as $payment)
-                    <tr>
-                        <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('d M Y') }}</td>
-                        <td>{{ ucfirst($payment->payment_method) }}</td>
-                        <td>Rp{{ number_format($payment->amount, 0, ',', '.') }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="3">Belum ada pembayaran</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                <tr>
+                    <td>Sudah Dibayar</td>
+                    <td>: Rp {{ number_format($account->amount_paid, 0, ',', '.') }}</td>
+                </tr>
+                <tr>
+                    <td>Status</td>
+                    <td>: {{ ucfirst($account->status) }}</td>
+                </tr>
+            </table>
+        @endforeach
+    @endif
 
-        <div class="line"></div>
+    <hr>
 
-        <div class="total">
-            <p><strong>Total:</strong> Rp{{ number_format($sales->total, 0, ',', '.') }}</p>
-            <p><strong>Diskon:</strong> Rp{{ number_format($sales->discount, 0, ',', '.') }}</p>
-            <p><strong>PPN (11%):</strong> Rp{{ number_format($sales->tax, 0, ',', '.') }}</p>
-            <p><strong>Grand Total:</strong> Rp{{ number_format($sales->grand_total, 0, ',', '.') }}</p>
-        </div>
-
-        <div class="footer">
-            <p><em>Terima kasih atas pembelian Anda!</em></p>
-        </div>
+    <div class="center">
+        Terima kasih telah berbelanja!
     </div>
 </body>
 

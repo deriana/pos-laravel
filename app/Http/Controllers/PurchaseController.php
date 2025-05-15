@@ -40,7 +40,8 @@ class PurchaseController extends Controller
         $purchase = Purchase::with(['supplier', 'purchaseItems.product', 'payments'])->findOrFail($id);
 
         $pdf = app(PDF::class)->loadView('Purchases.receipt', compact('purchase'));
-
+        $pdf->setOptions(['isRemoteEnabled' => true]);
+        
         if ($request->query('print') == 'true') {
             return $pdf->stream('struk_pembelian_' . $purchase->invoice_number . '.pdf');
         } else {

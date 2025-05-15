@@ -40,7 +40,8 @@ class SaleController extends Controller
     {
         $sales = Sale::with(['customer', 'items.product', 'payments'])->findOrFail($id);
 
-        $pdf = app(PDF::class)->loadView('Customers.receipt', compact('sales'));
+        $pdf = app(PDF::class)->loadView('Sales.receipt', compact('sales'));
+        $pdf->setOptions(['isRemoteEnabled' => true]);
 
         if ($request->query('print') == 'true') {
             return $pdf->stream('struk_pembelian_' . $sales->invoice_number . '.pdf');
