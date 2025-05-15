@@ -109,129 +109,104 @@
                 <ul class="menu-inner py-1">
 
                     <!-- Dashboard -->
-                    <li class="menu-item active">
-                        <a href="index.html" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                    <li class="menu-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-grid-alt"></i>
                             <div data-i18n="Analytics">Dashboard</div>
                         </a>
                     </li>
 
-                    <!-- Layouts -->
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-layout"></i>
-                            <div data-i18n="Layouts">Layouts</div>
-                        </a>
-
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="layouts-without-menu.html" class="menu-link">
-                                    <div data-i18n="Without menu">Without menu</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="layouts-without-navbar.html" class="menu-link">
-                                    <div data-i18n="Without navbar">Without navbar</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="layouts-container.html" class="menu-link">
-                                    <div data-i18n="Container">Container</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="layouts-fluid.html" class="menu-link">
-                                    <div data-i18n="Fluid">Fluid</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="layouts-blank.html" class="menu-link">
-                                    <div data-i18n="Blank">Blank</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Products</span>
-                    </li>
-                    <li class="menu-item ">
-                        <a href="index.html" class="menu-link">
-                            <i class="menu-icon tf-icons bx bxl-product-hunt"></i>
+                    <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
+                        <a href="{{ route('products.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cube"></i>
                             <div data-i18n="Analytics">Products</div>
                         </a>
                     </li>
 
-                    <li class="menu-header small text-uppercase">
-                        <span class="menu-header-text">Pages</span>
-                    </li>
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-dock-top"></i>
-                            <div data-i18n="Account Settings">Account Settings</div>
+                    <li class="menu-item {{ request()->routeIs('categories.*') ? 'active' : '' }}">
+                        <a href="{{ route('categories.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-category"></i>
+                            <div data-i18n="Analytics">Categories</div>
                         </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="pages-account-settings-account.html" class="menu-link">
-                                    <div data-i18n="Account">Account</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="pages-account-settings-notifications.html" class="menu-link">
-                                    <div data-i18n="Notifications">Notifications</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="pages-account-settings-connections.html" class="menu-link">
-                                    <div data-i18n="Connections">Connections</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-lock-open-alt"></i>
-                            <div data-i18n="Authentications">Authentications</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="auth-login-basic.html" class="menu-link" target="_blank">
-                                    <div data-i18n="Basic">Login</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="auth-register-basic.html" class="menu-link" target="_blank">
-                                    <div data-i18n="Basic">Register</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="auth-forgot-password-basic.html" class="menu-link" target="_blank">
-                                    <div data-i18n="Basic">Forgot Password</div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="menu-item">
-                        <a href="javascript:void(0);" class="menu-link menu-toggle">
-                            <i class="menu-icon tf-icons bx bx-cube-alt"></i>
-                            <div data-i18n="Misc">Misc</div>
-                        </a>
-                        <ul class="menu-sub">
-                            <li class="menu-item">
-                                <a href="pages-misc-error.html" class="menu-link">
-                                    <div data-i18n="Error">Error</div>
-                                </a>
-                            </li>
-                            <li class="menu-item">
-                                <a href="pages-misc-under-maintenance.html" class="menu-link">
-                                    <div data-i18n="Under Maintenance">Under Maintenance</div>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
 
+                    <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.create') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cart"></i>
+                            <div data-i18n="Analytics">Add Product From Suppliers</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
+                        <a href="{{ route('sales.create') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cart"></i>
+                            <div data-i18n="Analytics">Cashiers</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('suppliers.*') ? 'active' : '' }}">
+                        <a href="{{ route('suppliers.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-store-alt"></i>
+                            <div data-i18n="Analytics">Supplier</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('customers.*') ? 'active' : '' }}">
+                        <a href="{{ route('customers.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-user"></i>
+                            <div data-i18n="Analytics">Customers</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                        <a href="{{ route('users.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-user-check"></i>
+                            <div data-i18n="Analytics">Management Users</div>
+                        </a>
+                    </li>
+                    <!-- Reports Group -->
+                    <li class="menu-header small text-uppercase">
+                        <span class="menu-header-text">Reports</span>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('reports.sales') ? 'active' : '' }}">
+                        <a href="{{ route('reports.sales') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-bar-chart"></i>
+                            <div data-i18n="Sales Report">Sales Report</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('reports.purchases') ? 'active' : '' }}">
+                        <a href="{{ route('reports.purchases') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                            <div data-i18n="Purchase Report">Purchase Report</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('reports.inventory') ? 'active' : '' }}">
+                        <a href="{{ route('reports.inventory') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-package"></i>
+                            <div data-i18n="Inventory Report">Inventory Report</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('reports.customers') ? 'active' : '' }}">
+                        <a href="{{ route('reports.customers') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-user-voice"></i>
+                            <div data-i18n="Customer Report">Customer Report</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('reports.suppliers') ? 'active' : '' }}">
+                        <a href="{{ route('reports.suppliers') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-store"></i>
+                            <div data-i18n="Supplier Report">Supplier Report</div>
+                        </a>
+                    </li>
 
                 </ul>
+
+
             </aside>
             <!-- / Menu -->
 
@@ -267,8 +242,8 @@
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                     data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                        <img src="{{ asset('img/avatars/' . session('selectedAvatar', '1.png')) }}" alt
-                                            class="w-px-70 h-px-70 rounded-circle" />
+                                        <img src="{{ asset('img/avatars/' . session('selectedAvatar', '1.png')) }}"
+                                            alt class="w-px-70 h-px-70 rounded-circle" />
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -282,8 +257,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <span
-                                                        class="fw-semibold d-block">{{ Auth::user()->name }}</span>
+                                                    <span class="fw-semibold d-block">{{ Auth::user()->name }}</span>
                                                     <small class="text-muted">{{ Auth::user()->role }}</small>
                                                 </div>
                                             </div>
@@ -293,7 +267,7 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('auth.profile') }}">
                                             <i class="bx bx-user me-2"></i>
                                             <span class="align-middle">My Profile</span>
                                         </a>

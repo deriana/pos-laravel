@@ -2,18 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categories;
 use Illuminate\Http\Request;
 
-class SupplierController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categories = Categories::all();
-        return view('Customers.index', compact('categories'));
+        //
     }
 
     /**

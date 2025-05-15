@@ -3,10 +3,13 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\SaleController;
+use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckAuthenticated;
 use App\Http\Middleware\CheckVerified;
 use Illuminate\Support\Facades\Route;
@@ -14,14 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(function () {
     Route::get('/', function () {
         return view('Dashboard.index');
-    });
+    })->name('dashboard');
 
-    Route::resource('/products', ProductsController::class);
 
     Route::fallback(function () {
         return view('error.not-found');
     });
 
+    Route::resource('/products', ProductsController::class);
     Route::get('storage/images/{filename}', [ImageController::class, 'showImage']);
     Route::get('storage/qr/{filename}', [ImageController::class, 'showQrCode']);
     Route::resource('/categories', CategoriesController::class);
@@ -38,7 +41,18 @@ Route::middleware([CheckAuthenticated::class, CheckVerified::class])->group(func
     Route::get('purchases/{id}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.receipt');
     Route::get('/purchases/receipt-view/{id}', [PurchaseController::class, 'viewReceipt'])->name('purchases.receipt.view');
     Route::post('/purchase/{id}/pay-debt', [PurchaseController::class, 'payDebt'])->name('purchase.pay.debt');
-    Route::post('/checkout', [CartController::class, 'store'])->name('cart.store');
+    // Route::post('/checkout', [CartController::class, 'store'])->name('cart.store');
+    Route::resource('/suppliers', SupplierController::class);
+    Route::resource('/customers', CustomerController::class);
+    Route::resource('/users', UserController::class);
+
+    Route::prefix('reports')->name('reports.')->group(function () {
+        Route::get('/sales', fn() => view('reports.sales'))->name('sales');
+        Route::get('/purchases', fn() => view('reports.purchases'))->name('purchases');
+        Route::get('/inventory', fn() => view('reports.inventory'))->name('inventory');
+        Route::get('/customers', fn() => view('reports.customers'))->name('customers');
+        Route::get('/suppliers', fn() => view('reports.suppliers'))->name('suppliers');
+    });
 });
 
 
