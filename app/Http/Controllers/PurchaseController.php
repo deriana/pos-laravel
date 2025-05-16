@@ -119,7 +119,7 @@ class PurchaseController extends Controller
 
         $discountPercent = $request->input('discount', 0);
         $discountAmount = ($discountPercent / 100) * $total;
-        $taxAmount = 0.11 * ($total - $discountAmount);
+        $taxAmount = (config('app.tax') / 100) * ($total - $discountAmount);
         $grandTotal = ($total - $discountAmount) + $taxAmount;
         $invoiceNumber = $this->generateInvoiceNumber();
 

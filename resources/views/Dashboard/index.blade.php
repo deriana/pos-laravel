@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container-fluid mt-4">
-        <h2 class="mb-4">Dashboard UMKM</h2>
+        <h2 class="mb-4">Dashboard</h2>
 
         {{-- Ringkasan --}}
         <div class="row gy-4 mb-5">

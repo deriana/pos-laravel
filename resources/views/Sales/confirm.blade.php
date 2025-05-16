@@ -36,7 +36,7 @@
                                     <td class="text-end">Rp{{ number_format($sale->total, 2) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Tax (11%)</td>
+                                    <td>Tax ({{ config('app.tax')}}%)</td>
                                     <td class="text-end">Rp{{ number_format($sale->tax, 2) }}</td>
                                 </tr>
                                 <tr class="table-light">
@@ -145,8 +145,7 @@
                     </div>
                 </div>
 
-                <form id="payment-form" action="{{ route('confirmation.sale.transaction', $sale->id) }}"
-                    method="POST">
+                <form id="payment-form" action="{{ route('confirmation.sale.transaction', $sale->id) }}" method="POST">
                     @csrf
                     <input type="hidden" id="payment-amount" name="amount_paid" value="">
                     <input type="hidden" id="payment-methode" name="payment_methode" value="cash">

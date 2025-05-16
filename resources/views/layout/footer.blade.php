@@ -5,7 +5,7 @@
             <script>
                 document.write(new Date().getFullYear());
             </script>
-            , {{ env('APP_NAME') }}
+            , {{ config('app.name') }}
             <p class="footer-link fw-bolder">Deryana</p>
         </div>
         <div>

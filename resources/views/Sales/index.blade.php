@@ -78,7 +78,7 @@
                                     <th class="text-white">Tanggal</th>
                                     <th class="text-white">Total</th>
                                     <th class="text-white">Diskon</th>
-                                    <th class="text-white">PPN (11%)</th>
+                                    <th class="text-white">PPN</th>
                                     <th class="text-white">Grand Total</th>
                                     <th class="text-white">Status</th>
                                     <th class="text-white">Aksi</th>

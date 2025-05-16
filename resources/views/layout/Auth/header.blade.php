@@ -27,12 +27,12 @@
       content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
     />
 
-    <title>AUTH | {{ env('APP_NAME') }}</title>
+    <title>AUTH | {{ config('app.name') }}</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="img/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/logo/' . config('app.logo')) }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -77,7 +77,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Selamat datang di Warung Sunda!</h1>
+            <h1>Selamat datang di {{config('app.name')}}!</h1>
         </div>
 
         <div class="otp-container">

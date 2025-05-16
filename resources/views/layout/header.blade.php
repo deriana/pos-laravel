@@ -8,12 +8,12 @@
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ env('APP_NAME') }}</title>
+    <title>{{ config('app.name') }}</title>
 
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ asset('img') }}/favicon/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/logo/' . config('app.logo')) }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,9 +53,14 @@
 
             <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
                 <div class="app-brand demo">
-                    <a href="{{ route('dashboard') }}" class="app-brand-link">
-
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2">{{ env('APP_NAME') }}</span>
+                    <a href="{{ route('dashboard') }}" class="app-brand-link d-flex align-items-center w-100 rounded">
+                        <div class="col-4 d-flex justify-content-start">
+                            <img src="{{ asset('img/logo/' . config('app.logo')) }}" alt="{{ config('app.name') }}"
+                                class="img-fluid rounded-circle" style="max-width: 50px;">
+                        </div>
+                        <div class="col-8 d-flex justify-content-start">
+                            <span class="app-brand-text fw-bold text-nowrap">{{ config('app.name') }}</span>
+                        </div>
                     </a>
 
 
@@ -242,6 +247,14 @@
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
+                                    @if (auth()->user() && auth()->user()->role === 'admin')
+                                        <li>
+                                            <a class="dropdown-item" href="{{ route('settings.edit') }}">
+                                                <i class="bx bx-store me-2"></i>
+                                                <span class="align-middle">Edit Store</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <a class="dropdown-item" href="{{ route('auth.profile') }}">
                                             <i class="bx bx-user me-2"></i>

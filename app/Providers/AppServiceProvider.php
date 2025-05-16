@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Setting;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $appName = Setting::getValue('APP_NAME', config('app.name'));
+        $tax = Setting::getValue('TAX', config('app.tax'));
+        $logo = Setting::getValue('APP_LOGO', config('app.logo'));
+
+        config([
+            'app.name' => $appName,
+            'app.tax' => $tax,
+            'app.logo' => $logo,
+        ]);
     }
 }

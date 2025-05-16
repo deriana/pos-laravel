@@ -36,7 +36,7 @@
                                     <td class="text-end">Rp{{ number_format($purchase->total, 2) }}</td>
                                 </tr>
                                 <tr>
-                                    <td>Tax (11%)</td>
+                                    <td>Tax ({{ config('app.tax') }}%)</td>
                                     <td class="text-end">Rp{{ number_format($purchase->tax, 2) }}</td>
                                 </tr>
                                 <tr class="table-light">

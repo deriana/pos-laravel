@@ -8,11 +8,11 @@
                 <div class="card-body">
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
-                        <h1>Warung Sunda</h1>
+                        <h1>{{ config('app.name') }}</h1>
                     </div>
                     <!-- /Logo -->
-                    <h4 class="mb-2">Welcome to Warung Sunda</h4>
-                    <p class="mb-4">Please sign-in to your account and start the Mangan</p>
+                    <h4 class="mb-2">Welcome to {{ config('app.name') }}</h4>
+                    <p class="mb-4">Please sign-in to your account and start the economy</p>
 
                     <form id="formAuthentication" class="mb-3" action="{{ route('auth.login') }}" method="POST">
                         @csrf

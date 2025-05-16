@@ -8,11 +8,10 @@
                 <div class="card-body">
                     <!-- Logo -->
                     <div class="app-brand justify-content-center">
-                        <a href="index.html" class="app-brand-link gap-2">
-                            <span class="app-brand-logo demo">
-                                <!-- Logo SVG here -->
-                            </span>
-                            <span class="app-brand-text demo text-body fw-bolder">Sneat</span>
+                           <a href="#" class="app-brand-link gap-2">
+                              <img src="{{ asset('img/logo/' . config('app.logo')) }}" alt="{{ config('app.name') }}"
+                                class="img-fluid rounded-circle" style="max-width: 50px;">
+                            <span class="app-brand-text demo text-body fw-bolder">{{ config('app.name') }}</span>
                         </a>
                     </div>
                     <!-- /Logo -->
