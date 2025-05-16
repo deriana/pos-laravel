@@ -152,6 +152,17 @@
                                 <div data-i18n="Supplier Report">Profit Report</div>
                             </a>
                         </li>
+
+                        <li class="menu-header small text-uppercase">
+                            <span class="menu-header-text">Backup</span>
+                        </li>
+
+                        <li class="menu-item">
+                            <a href="javascript:void(0)" onclick="confirmBackup()" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-data"></i>
+                                <div data-i18n="Supplier Report">Backup Database</div>
+                            </a>
+                        </li>
                     @endif
 
                     @if (auth()->user() && auth()->user()->role === 'kasir')

@@ -49,6 +49,21 @@
             }
         });
     });
+
+    function confirmBackup() {
+        Swal.fire({
+            title: 'Backup Database?',
+            text: 'File backup akan diunduh ke perangkat Anda.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Backup!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "{{ route('backup.database') }}";
+            }
+        });
+    }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="{{ asset('vendor/libs/jquery/jquery.js') }}"></script>

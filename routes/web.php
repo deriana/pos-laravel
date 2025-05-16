@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BackupController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\CustomerController;
@@ -62,6 +63,7 @@ Route::middleware([CheckAuthenticated::class])->group(function () {
         Route::resource('/customers', CustomerController::class);
         Route::resource('/users', UserController::class);
         Route::resource('/products', ProductsController::class);
+        Route::get('/backup', [BackupController::class, 'backupDatabase'])->name('backup.database')->middleware('auth');
 
         Route::get('/settings', [SettingController::class, 'edit'])->name('settings.edit');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
