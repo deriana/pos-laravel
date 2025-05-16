@@ -44,13 +44,16 @@ Route::middleware([CheckAuthenticated::class])->group(function () {
     Route::get('sales/{id}/receipt', [SaleController::class, 'showReceipt'])->name('sales.receipt');
     Route::get('/sales/receipt-view/{id}', [SaleController::class, 'viewReceipt'])->name('sales.receipt.view');
     Route::post('/sale/{id}/pay-debt', [SaleController::class, 'payDebt'])->name('sale.pay.debt');
+    Route::get('/sale/debt/{id}/confirm-payment', [SaleController::class, 'showDebtPayment'])->name('debt.sale.confirmPayment');
+    Route::get('/sales/confirmation/{id}', [SaleController::class, 'showConfirmation'])->name('sale.confirmation');
+    Route::post('/sales/confirmation/{id}', [SaleController::class, 'confirmation'])->name('confirmation.sale.transaction');
 
     Route::resource('/purchases', PurchaseController::class)->except('show');
 
     Route::get('purchases/{id}/receipt', [PurchaseController::class, 'showReceipt'])->name('purchases.receipt');
     Route::get('/purchases/receipt-view/{id}', [PurchaseController::class, 'viewReceipt'])->name('purchases.receipt.view');
     Route::post('/purchase/{id}/pay-debt', [PurchaseController::class, 'payDebt'])->name('purchase.pay.debt');
-    Route::get('/purchase/debt/{id}/confirm-payment', [PurchaseController::class, 'showDebtPayment'])->name('debt.confirmPayment');
+    Route::get('/purchase/debt/{id}/confirm-payment', [PurchaseController::class, 'showDebtPayment'])->name('debt.purchase.confirmPayment');
     Route::get('/purchases/confirmation/{id}', [PurchaseController::class, 'showConfirmation'])->name('purchases.confirmation');
     Route::post('/purchases/confirmation/{id}', [PurchaseController::class, 'confirmation'])->name('confirmation.purchase.transaction');
 

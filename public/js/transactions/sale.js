@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Fungsi untuk menghitung total
     function calculateTotal() {
         let grandTotal = 0;
-        const amountPaid = parseFloat(amountPaidInput.value) || 0;
+        const amountPaid = 0;
 
         // Menghitung subtotal untuk setiap produk
         const cartItems = document.querySelectorAll(".cart-item");

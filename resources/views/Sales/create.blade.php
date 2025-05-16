@@ -118,14 +118,6 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="payment_methode" class="form-label fw-semibold">Metode Pembayaran</label>
-                        <select name="payment_methode" id="payment_methode" class="form-select">
-                            <option value="cash">Cash</option>
-                            <option value="credit">Kredit</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
                         <label for="payment_date" class="form-label fw-semibold">Tanggal Pembayaran</label>
                         <input type="date" name="payment_date" class="form-control" id="payment_date"
                             value="now">
@@ -136,22 +128,10 @@
                         <textarea name="note" class="form-control" id="note" rows="3"
                             placeholder="Masukkan catatan tambahan"></textarea>
                     </div>
-                    <div class="mb-4">
-                        <label for="amount_paid" class="form-label fw-semibold">Jumlah Dibayar</label>
-                        <input type="number" id="amount_paid" name="amount_paid" class="form-control" min="0"
-                            placeholder="Masukkan Jumlah yang Dibayar" oninput="calculateTotal()">
-                    </div>
 
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="mb-4">
-                            <h5>Grand Total</h5>
-                            <p id="grand-total">Rp 0</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <h5>Kembalian</h5>
-                            <p id="change">Rp 0</p>
-                        </div>
+                 <div class="mb-4">
+                        <h5>Grand Total</h5>
+                        <p id="grand-total">Rp 0</p>
                     </div>
                     <button type="submit" class="btn btn-success w-100">Simpan Transaksi</button>
                 </form>

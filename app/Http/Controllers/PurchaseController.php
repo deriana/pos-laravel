@@ -141,12 +141,6 @@ class PurchaseController extends Controller
                 'price' => $item['price'],
                 'subtotal' => $item['subtotal'],
             ]);
-
-            // $product = Products::find($item['id']);
-            // if ($product) {
-            //     $product->stock += $item['quantity'];
-            //     $product->save();
-            // }
         }
 
         // Kirim data ke halaman konfirmasi (dengan compact atau array)

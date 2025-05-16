@@ -183,7 +183,7 @@
                                                                     {{ ucfirst($account->status) }}
                                                                     @if ($account->status !== 'paid')
                                                                         <div class="mt-2">
-                                                                            <a href="{{ route('debt.confirmPayment', $account->id) }}"
+                                                                            <a href="{{ route('debt.purchase.confirmPayment', $account->id) }}"
                                                                                 class="btn btn-sm btn-warning">
                                                                                 <i class="bi bi-cash-coin"></i> Bayar Hutang
                                                                             </a>

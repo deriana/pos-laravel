@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 15,2);
             $table->date('payment_date');
-            $table->enum('payment_methode', ['cash', 'transfer']);
+            $table->enum('payment_methode', ['cash', 'credit']);
             $table->text('note')->nullable();
         });
     }
