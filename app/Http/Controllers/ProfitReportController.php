@@ -23,17 +23,18 @@ class ProfitReportController extends Controller
             });
         }
 
-        $saleItems = $query->get();
+        $saleItems = $query->paginate(10);
 
         $report = $saleItems->map(function ($item) {
-            $purchasePrice = $item->product->purchase_price;
-            $sellingPrice = $item->product->selling_price;
+            $purchasePrice = $item->product ? $item->product->purchase_price : 0;
+            $sellingPrice = $item->product ? $item->product->selling_price : 0;
             $quantity = $item->quantity;
+            $productName = $item->product ? $item->product->name : 'Barang Unknown';
             $profit = ($sellingPrice - $purchasePrice) * $quantity;
 
             return [
                 'sale_date' => $item->sale->sale_date,  // tambahkan ini
-                'product_name' => $item->product->name,
+                'product_name' => $productName,
                 'quantity' => $quantity,
                 'purchase_price' => $purchasePrice,
                 'selling_price' => $sellingPrice,
@@ -49,6 +50,7 @@ class ProfitReportController extends Controller
             'totalProfit' => $totalProfit,
             'startDate' => $startDate,
             'endDate' => $endDate,
+            'saleItems' => $saleItems
         ]);
     }
 

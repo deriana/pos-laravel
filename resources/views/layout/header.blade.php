@@ -78,8 +78,8 @@
                         </a>
                     </li>
 
-                    <!-- Master Data (Data utama dan sering digunakan) -->
-                    @if (auth()->user() && auth()->user()->role === 'admin')
+                    @if (auth()->user()?->role === 'admin')
+                        <!-- Admin Access -->
                         <li class="menu-header">Master Data</li>
 
                         <li class="menu-item {{ request()->routeIs('products.*') ? 'active' : '' }}">
@@ -110,10 +110,7 @@
                             </a>
                         </li>
 
-
-                        <!-- Management (Admin level) -->
                         <li class="menu-header">Management</li>
-
                         <li class="menu-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
                             <a href="{{ route('users.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-user-check"></i>
@@ -121,7 +118,7 @@
                             </a>
                         </li>
 
-                        <!-- Reports Group -->
+                        <!-- Reports -->
                         <li class="menu-header small text-uppercase">
                             <span class="menu-header-text">Reports</span>
                         </li>
@@ -146,10 +143,11 @@
                                 <div data-i18n="Inventory Report">Inventory Report</div>
                             </a>
                         </li>
+
                         <li class="menu-item {{ request()->routeIs('reports.profit') ? 'active' : '' }}">
                             <a href="{{ route('reports.profit') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-store"></i>
-                                <div data-i18n="Supplier Report">Profit Report</div>
+                                <div data-i18n="Profit Report">Profit Report</div>
                             </a>
                         </li>
 
@@ -160,43 +158,42 @@
                         <li class="menu-item">
                             <a href="javascript:void(0)" onclick="confirmBackup()" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-data"></i>
-                                <div data-i18n="Supplier Report">Backup Database</div>
+                                <div data-i18n="Backup">Backup Database</div>
                             </a>
                         </li>
                     @endif
 
-                    @if (auth()->user() && auth()->user()->role === 'kasir')
-                        <!-- Transaksi (Operasi harian penting) -->
-                        <li class="menu-header">Transaksi</li>
+                    <!-- Cashier Access -->
+                    <li class="menu-header">Transaksi</li>
 
-                        <li class="menu-item {{ request()->routeIs('purchases.index') ? 'active' : '' }}">
-                            <a href="{{ route('purchases.index') }}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-list-ul"></i>
-                                <div data-i18n="Purchases Index">List Purchases</div>
-                            </a>
-                        </li>
+                    <li class="menu-item {{ request()->routeIs('purchases.index') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                            <div data-i18n="List Purchases">List Purchases</div>
+                        </a>
+                    </li>
 
-                        <li class="menu-item {{ request()->routeIs('purchases.create') ? 'active' : '' }}">
-                            <a href="{{ route('purchases.create') }}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-cart"></i>
-                                <div data-i18n="Purchases">Add Product From Suppliers</div>
-                            </a>
-                        </li>
+                    <li class="menu-item {{ request()->routeIs('purchases.create') ? 'active' : '' }}">
+                        <a href="{{ route('purchases.create') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cart"></i>
+                            <div data-i18n="Add Purchase">Add Product From Suppliers</div>
+                        </a>
+                    </li>
 
-                        <li class="menu-item {{ request()->routeIs('sales.index') ? 'active' : '' }}">
-                            <a href="{{ route('sales.index') }}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-list-ul"></i>
-                                <div data-i18n="Sales Index">List Sales</div>
-                            </a>
-                        </li>
+                    <li class="menu-item {{ request()->routeIs('sales.index') ? 'active' : '' }}">
+                        <a href="{{ route('sales.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-list-ul"></i>
+                            <div data-i18n="List Sales">List Sales</div>
+                        </a>
+                    </li>
 
-                        <li class="menu-item {{ request()->routeIs('sales.create') ? 'active' : '' }}">
-                            <a href="{{ route('sales.create') }}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-cart"></i>
-                                <div data-i18n="Sales">Cashiers</div>
-                            </a>
-                        </li>
-                    @endif
+                    <li class="menu-item {{ request()->routeIs('sales.create') ? 'active' : '' }}">
+                        <a href="{{ route('sales.create') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cart"></i>
+                            <div data-i18n="Cashiers">Cashiers</div>
+                        </a>
+                    </li>
+
                 </ul>
 
             </aside>

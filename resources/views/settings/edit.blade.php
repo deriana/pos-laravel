@@ -3,9 +3,9 @@
     @section('content')
         {{-- Ganti bg-primary dengan background image --}}
         <div class="py-5 mb-5"
-            style="background: url('{{ asset('img/logo/' . config('app.logo')) }}') center center / cover no-repeat;">
+            style="background: url('{{ asset('img/logo/' . config('app.logo')) }}') center center / cover no-repeat; height: 300px;">
             <div class="container text-white text-shadow">
-                <h3 class="fw-bold">Store Settings</h3>
+                <h3 class="fw-bold text-black">Store Settings</h3>
                 <p class="lead">Update your store configuration below.</p>
             </div>
         </div>
@@ -13,7 +13,7 @@
 
 
         <div class="container">
-            @if ($errors->any())
+            {{-- @if ($errors->any())
                 <div class="container mb-4">
                     <div class="alert alert-danger rounded-3">
                         <h5 class="mb-2">Whoops! There were some problems with your input:</h5>
@@ -24,7 +24,7 @@
                         </ul>
                     </div>
                 </div>
-            @endif
+            @endif --}}
 
             <div class="row justify-content-center">
                 <div class="col-md-8">

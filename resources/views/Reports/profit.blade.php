@@ -30,6 +30,7 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>Sale Date</th>
                     <th>Product</th>
                     <th>Quantity</th>
@@ -42,6 +43,7 @@
             <tbody>
                 @foreach ($report as $row)
                     <tr>
+                        <td>{{ $loop->iteration }}</td>
                         <td>{{ \Illuminate\Support\Carbon::parse($row['sale_date'])->format('Y-m-d') }}</td>
                         <!-- Tanggal -->
                         <td>{{ $row['product_name'] }}</td>
@@ -60,6 +62,7 @@
                 </tr>
             </tfoot>
         </table>
-
+        <div class="d-flex justify-content-center">
+            {{ $saleItems->onEachSide(0)->links('pagination::simple-bootstrap-5') }} </div>
     </div>
 @endsection
