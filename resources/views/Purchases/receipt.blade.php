@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>{{ env('APP_NAME') }} | Invoice</title>
+    <title>{{ config('app.name') }} | Invoice</title>
 
     <style>
         .invoice-box {
@@ -102,7 +102,7 @@
 
 <body>
     @php
-        $path = public_path('image.jpeg');
+        $path = public_path('img/logo/' . config('app.logo'));
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
@@ -149,7 +149,7 @@
 
             <tr class="heading" style="background: #eee; border-bottom: 1px solid #ddd;">
                 <td style="padding: 5px;">
-                    Payment Method 
+                    Payment Method
                 </td>
                 <td style="padding: 5px; text-align: right;">Amount Paid</td>
             </tr>

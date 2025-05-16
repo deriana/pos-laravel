@@ -41,7 +41,7 @@
 
 <body>
     <div class="center">
-        <strong>{{ env('APP_NAME') }}</strong><br>
+        <strong>{{config('app.name')}}</strong><br>
         {{ now()->format('d M Y H:i') }}
     </div>
 
