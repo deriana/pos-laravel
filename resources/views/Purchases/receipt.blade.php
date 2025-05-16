@@ -196,7 +196,7 @@
             </tr>
 
             <tr class="total" style="font-weight: bold;">
-                <td style="padding: 5px; text-align: right;">Pajak (11%)</td>
+                <td style="padding: 5px; text-align: right;">Pajak ({{ config('app.tax') }}%)</td>
                 <td style="padding: 5px; text-align: right;">
                     Rp {{ number_format($purchase->tax, 2, ',', '.') }}
                 </td>

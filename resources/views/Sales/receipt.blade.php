@@ -79,7 +79,7 @@
             <td style="text-align: right;">Rp {{ number_format($sales->discount, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td colspan="2">PPN 11%</td>
+            <td colspan="2">PPN {{config('app.tax')}}%</td>
             <td style="text-align: right;">Rp {{ number_format($sales->tax, 0, ',', '.') }}</td>
         </tr>
         <tr>
