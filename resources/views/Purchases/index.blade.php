@@ -48,8 +48,8 @@
                 </script>
             @endif
             {{-- Filter Status --}}
-            <form method="GET" class="mb-4">
-                <div class="form-group row">
+           <form method="GET" class="mb-4" action="{{ route('purchases.index') }}">
+                <div class="form-group row align-items-center">
                     <label for="status" class="col-sm-2 col-form-label">Filter Status:</label>
                     <div class="col-sm-4">
                         <select name="status" id="status" class="form-control" onchange="this.form.submit()">
@@ -58,6 +58,19 @@
                             <option value="unpaid" {{ request('status') == 'unpaid' ? 'selected' : '' }}>Unpaid</option>
                             <option value="partial" {{ request('status') == 'partial' ? 'selected' : '' }}>Partial</option>
                         </select>
+                    </div>
+
+                    <label for="per_page" class="col-sm-2 col-form-label text-end">Show:</label>
+                    <div class="col-sm-2">
+                        <select name="per_page" id="per_page" class="form-control" onchange="this.form.submit()">
+                            <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                            <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                            <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <span>items per page</span>
                     </div>
                 </div>
             </form>
@@ -200,6 +213,10 @@
                                 @endforeach
                             </tbody>
                         </table>
+
+                         <div class="d-flex justify-content-center">
+                            {{ $purchases->onEachSide(0)->links('pagination::simple-bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>

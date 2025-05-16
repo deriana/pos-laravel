@@ -38,8 +38,8 @@
             @endif
 
             {{-- Filter Status --}}
-            <form method="GET" class="mb-4">
-                <div class="form-group row">
+            <form method="GET" class="mb-4" action="{{ route('sales.index') }}">
+                <div class="form-group row align-items-center">
                     <label for="status" class="col-sm-2 col-form-label">Filter Status:</label>
                     <div class="col-sm-4">
                         <select name="status" id="status" class="form-control" onchange="this.form.submit()">
@@ -49,8 +49,22 @@
                             <option value="partial" {{ request('status') == 'partial' ? 'selected' : '' }}>Partial</option>
                         </select>
                     </div>
+
+                    <label for="per_page" class="col-sm-2 col-form-label text-end">Show:</label>
+                    <div class="col-sm-2">
+                        <select name="per_page" id="per_page" class="form-control" onchange="this.form.submit()">
+                            <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                            <option value="20" {{ request('per_page') == 20 ? 'selected' : '' }}>20</option>
+                            <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                        </select>
+                    </div>
+
+                    <div class="col-sm-2">
+                        <span>items per page</span>
+                    </div>
                 </div>
             </form>
+
 
             <div class="card shadow-sm">
                 <div class="card-body">
@@ -58,7 +72,7 @@
                         <table class="table table-hover table-striped">
                             <thead class="bg-primary text-white">
                                 <tr>
-                                   <th class="text-white fw-bol">#</th>
+                                    <th class="text-white fw-bol">#</th>
                                     <th class="text-white">Invoice</th>
                                     <th class="text-white">Supplier</th>
                                     <th class="text-white">Tanggal</th>
@@ -67,7 +81,7 @@
                                     <th class="text-white">PPN (11%)</th>
                                     <th class="text-white">Grand Total</th>
                                     <th class="text-white">Status</th>
-                                    <th class="text-white">Aksi</th>    
+                                    <th class="text-white">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -174,7 +188,7 @@
                                                                     {{ ucfirst($account->status) }}
                                                                     @if ($account->status !== 'paid')
                                                                         <div class="mt-2">
-                                                                         <a href="{{ route('debt.sale.confirmPayment', $account->id) }}"
+                                                                            <a href="{{ route('debt.sale.confirmPayment', $account->id) }}"
                                                                                 class="btn btn-sm btn-warning">
                                                                                 <i class="bi bi-cash-coin"></i> Bayar Hutang
                                                                             </a>
@@ -191,6 +205,11 @@
                                 @endforeach
                             </tbody>
                         </table>
+
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-center">
+                            {{ $purchases->onEachSide(0)->links('pagination::simple-bootstrap-5') }}
+                        </div>
                     </div>
                 </div>
             </div>

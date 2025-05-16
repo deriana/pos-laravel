@@ -18,6 +18,8 @@ class SaleController extends Controller
 
     public function index()
     {
+        $perPage = request('per_page', 10); // default 10 jika tidak ada parameter
+
         $purchases = Sale::with([
             'customer',
             'items.product',
@@ -30,11 +32,12 @@ class SaleController extends Controller
                 });
             })
             ->latest()
-            ->get();
-
+            ->paginate($perPage)
+            ->withQueryString(); // agar parameter tetap ada saat pindah halaman
 
         return view('Sales.index', compact('purchases'));
     }
+
 
     public function showReceipt($id, Request $request)
     {
