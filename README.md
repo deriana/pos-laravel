@@ -13,7 +13,7 @@ Ikuti langkah berikut untuk menjalankan project Laravel ini di komputer lokal ka
 
 2. Masuk ke folder project:
     ```bash
-    cd nama-folder-project
+    cd pos-laravel
     ```
 
 3. Install dependencies menggunakan Composer:
