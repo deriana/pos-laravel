@@ -160,7 +160,7 @@
                             </a>
                         </li>
 
-                        <li class="menu-item {{ request()->routeIs('purchases.*') ? 'active' : '' }}">
+                        <li class="menu-item {{ request()->routeIs('purchases.create') ? 'active' : '' }}">
                             <a href="{{ route('purchases.create') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-cart"></i>
                                 <div data-i18n="Purchases">Add Product From Suppliers</div>
@@ -174,7 +174,7 @@
                             </a>
                         </li>
 
-                        <li class="menu-item {{ request()->routeIs('sales.*') ? 'active' : '' }}">
+                        <li class="menu-item {{ request()->routeIs('sales.create') ? 'active' : '' }}">
                             <a href="{{ route('sales.create') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-cart"></i>
                                 <div data-i18n="Sales">Cashiers</div>

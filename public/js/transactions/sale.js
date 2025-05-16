@@ -53,11 +53,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Menghitung dan menampilkan Kembalian
         const change = amountPaid - totalWithTax;
-        changeElement.textContent = `Rp ${
-            change < 0
-                ? 0
-                : change.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
-        }`;
+        changeElement.textContent = `Rp ${change < 0
+            ? 0
+            : change.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+            }`;
     }
 
     // Event Listener untuk tombol tambah ke keranjang
@@ -67,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const productName = this.getAttribute("data-name");
             const productPrice = this.getAttribute("data-price");
             const productImage = this.getAttribute("data-image");
+            const productStock = parseInt(this.getAttribute("data-stock")) || 0; // <<< PINDAHKAN KE SINI
 
             let existingCartItem = null;
             const cartItems = document.querySelectorAll(".cart-item");
@@ -85,6 +85,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 const quantityInput =
                     existingCartItem.querySelector(".quantity");
                 let currentQuantity = parseInt(quantityInput.value) || 1;
+
+                if (currentQuantity >= productStock) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Stok Tidak Cukup",
+                        text: `Jumlah melebihi stok (${productStock} tersedia)`,
+                    });
+                    return;
+                }
+
                 quantityInput.value = currentQuantity + 1;
 
                 // Update harga jual jika diperlukan
@@ -98,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Jika produk belum ada, tambahkan produk baru ke keranjang
                 const cartItem = document.createElement("div");
                 cartItem.classList.add("cart-item", "mb-3");
+                cartItem.setAttribute("data-stock", productStock); // Sekarang aman dipakai
                 cartItem.innerHTML = `
         <div class="col-12">
             <div class="card cart-product-card w-100" style="height: 450px;">
@@ -155,8 +166,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 const quantityPlusButton = cartItem.querySelector(".quantity-plus");
                 const quantityMinusButton = cartItem.querySelector(".quantity-minus");
 
+                // Hapus ini! (jangan pakai event listener ini lagi)
+                // quantityPlusButton.addEventListener("click", function () {
+                //     quantityInput.value = parseInt(quantityInput.value) + 1;
+                //     calculateTotal();
+                // });
+
+                // Gunakan hanya ini:
                 quantityPlusButton.addEventListener("click", function () {
-                    quantityInput.value = parseInt(quantityInput.value) + 1;
+                    const maxStock = parseInt(cartItem.getAttribute("data-stock")) || 0;
+                    const currentQty = parseInt(quantityInput.value);
+
+                    if (currentQty >= maxStock) {
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Stok Tidak Cukup",
+                            text: `Jumlah melebihi stok (${maxStock} tersedia)`,
+                        });
+                        return;
+                    }
+
+                    quantityInput.value = currentQty + 1;
                     calculateTotal();
                 });
 
