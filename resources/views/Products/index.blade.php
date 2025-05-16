@@ -65,7 +65,7 @@
                         <div class="card-img-container"
                             style="position: relative; width: 100%; padding-bottom: 56.25%; overflow: hidden;">
                             <img class="card-img-top"
-                                src="{{ $product->product_image ? url('storage/images/' . $product->product_image) : asset('images/box-icon.jpg') }}"
+                                src="{{ $product->product_image ? url('storage/images/' . $product->product_image) : asset('img/box-icon.jpg') }}"
                                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
                                 alt="Product {{ $product->name }}">
                         </div>

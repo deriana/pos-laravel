@@ -8,14 +8,16 @@ class ImageController extends Controller
 {
     public function showImage($filename)
     {
-        $path = storage_path("app/private/public/images/{$filename}");
+        $path = storage_path("app/private/images/{$filename}");
 
         if (file_exists($path)) {
             return response()->file($path);
-        } else {
-            abort(404);
         }
+
+        // Fallback ke image default jika tidak ditemukan
+        return response()->file(public_path('img/box-icon.jpg'));
     }
+
 
     public function showQrCode($filename)
     {
