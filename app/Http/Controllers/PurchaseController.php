@@ -41,7 +41,7 @@ class PurchaseController extends Controller
 
         $pdf = app(PDF::class)->loadView('Purchases.receipt', compact('purchase'));
         $pdf->setOptions(['isRemoteEnabled' => true]);
-        
+
         if ($request->query('print') == 'true') {
             return $pdf->stream('struk_pembelian_' . $purchase->invoice_number . '.pdf');
         } else {
@@ -68,7 +68,6 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // Validasi untuk supplier lama atau data supplier baru
             'supplier_id' => 'nullable|exists:suppliers,id',
             'supplier.name' => 'nullable|string|max:255',
             'supplier.email' => 'nullable|string|',
@@ -80,13 +79,12 @@ class PurchaseController extends Controller
             'products.*.quantity' => 'required|integer|min:1',
             'products.*.price' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0|max:100',
-            'amount_paid' => 'nullable|numeric|min:0',
             'payment_methode' => 'nullable|in:cash,credit',
             'payment_date' => 'nullable|date',
             'note' => 'nullable|string|max:255',
         ]);
 
-        // Buat supplier baru jika tidak ada supplier_id
+        // Supplier handling
         if ($request->filled('supplier_id')) {
             $supplierId = $request->supplier_id;
         } else {
@@ -102,32 +100,25 @@ class PurchaseController extends Controller
         $userId = Auth::id();
         $products = $request->input('products');
         $total = 0;
-        $subtotalItems = [];
+        $items = [];
 
         foreach ($products as $product) {
             $subtotal = $product['quantity'] * $product['price'];
             $total += $subtotal;
-            $subtotalItems[] = [
-                'product_id' => $product['id'],
+            $items[] = [
+                'id' => $product['id'],
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
                 'subtotal' => $subtotal,
+                'product' => Products::find($product['id']), // Untuk dapatkan nama dan info produk di view
             ];
         }
 
         $discountPercent = $request->input('discount', 0);
-        $discount = ($discountPercent / 100) * $total;
-        $tax = 0.11 * ($total - $discount);
-        $grandTotal = ($total - $discount) + $tax;
+        $discountAmount = ($discountPercent / 100) * $total;
+        $taxAmount = 0.11 * ($total - $discountAmount);
+        $grandTotal = ($total - $discountAmount) + $taxAmount;
         $invoiceNumber = $this->generateInvoiceNumber();
-        $amountPaid = $request->input('amount_paid', 0);
-
-        // Tentukan status pembayaran
-        $paymentStatus = match (true) {
-            $amountPaid >= $grandTotal => 'paid',
-            $amountPaid > 0 => 'partial',
-            default => 'unpaid',
-        };
 
         $purchase = Purchase::create([
             'supplier_id' => $supplierId,
@@ -135,56 +126,32 @@ class PurchaseController extends Controller
             'sale_date' => now(),
             'invoice_number' => $invoiceNumber,
             'total' => $total,
-            'discount' => $discount,
-            'tax' => $tax,
+            'discount' => $discountAmount,
+            'tax' => $taxAmount,
             'grand_total' => $grandTotal,
-            'payment_status' => $paymentStatus,
+            'payment_status' => 'unpaid',
             'note' => $request->input('note'),
         ]);
 
-        foreach ($subtotalItems as $item) {
+        foreach ($items as $item) {
             PurchaseItem::create([
                 'purchase_id' => $purchase->id,
-                'product_id' => $item['product_id'],
+                'product_id' => $item['id'],
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
                 'subtotal' => $item['subtotal'],
             ]);
 
-            $product = Products::find($item['product_id']);
-            if ($product) {
-                $product->stock += $item['quantity'];
-                $product->save();
-            }
+            // $product = Products::find($item['id']);
+            // if ($product) {
+            //     $product->stock += $item['quantity'];
+            //     $product->save();
+            // }
         }
 
-        PurchasePayment::create([
-            'purchase_id' => $purchase->id,
-            'amount' => $amountPaid,
-            'payment_date' => $request->input('payment_date', now()),
-            'payment_methode' => $request->input('payment_methode', 'cash'),
-            'note' => $request->input('note'),
-        ]);
-
-        if ($paymentStatus !== 'paid') {
-            AccountsPayable::create([
-                'supplier_id' => $supplierId,
-                'purchase_id' => $purchase->id,
-                'amount_due' => $grandTotal,
-                'amount_paid' => $paymentStatus === 'partial' ? $amountPaid : 0,
-                'due_date' => now()->addDays(30),
-                'payment_methode' => $request->input('payment_methode', 'cash'),
-                'status' => $paymentStatus,
-            ]);
-        }
-
-        return redirect()->route('purchases.index')->with([
-            'success' => 'Transaksi berhasil!',
-            'purchase_id' => $purchase->id
-        ]);
+        // Kirim data ke halaman konfirmasi (dengan compact atau array)
+        return redirect()->route('purchases.confirmation', ['id' => $purchase->id]);
     }
-
-
 
     private function generateInvoiceNumber()
     {
@@ -197,12 +164,19 @@ class PurchaseController extends Controller
         return sprintf('INV-%s-%03d', $date, $lastInvoiceNumber + 1);
     }
 
+    public function showDebtPayment($id)
+    {
+        $account = AccountsPayable::findOrFail($id);
+        $purchase = $account->purchase;
+
+        return view('Purchases.confirm-debt', compact('account', 'purchase'));
+    }
+
     public function payDebt(Request $request, $id)
     {
         $request->validate([
-            'amount' => 'required|numeric|min:0.01',
+            'amount_paid' => 'required|numeric|min:0.01',
             'payment_methode' => 'required|in:cash,credit',
-            'payment_date' => 'required|date',
         ]);
 
         $account = AccountsPayable::findOrFail($id);
@@ -211,14 +185,14 @@ class PurchaseController extends Controller
         // Tambah pembayaran ke tabel purchase_payments
         PurchasePayment::create([
             'purchase_id' => $purchase->id,
-            'amount' => $request->amount,
-            'payment_date' => $request->payment_date,
+            'amount' => $request->amount_paid,
+            'payment_date' => now(),
             'payment_methode' => $request->payment_methode,
             'note' => 'Pembayaran hutang',
         ]);
 
         // Update jumlah yang sudah dibayar
-        $account->amount_paid += $request->amount;
+        $account->amount_paid += $request->amount_paid;
 
         // Tentukan status
         if ($account->amount_paid >= $account->amount_due) {
@@ -232,6 +206,84 @@ class PurchaseController extends Controller
         $account->save();
         $purchase->save();
 
-        return redirect()->back()->with('success', 'Pembayaran hutang berhasil dicatat.');
+        return redirect()->route('purchases.index')
+            ->with('success', 'Pembelian dikonfirmasi dan disimpan.')
+            ->with('purchase_id', $purchase->id);
+    }
+
+    public function showConfirmation($id)
+    {
+        $purchase = Purchase::with(['purchaseItems.product', 'user', 'supplier'])->findOrFail($id);
+
+        if ($purchase->payment_status === 'paid') {
+            // Redirect ke index jika sudah lunas
+            return redirect()->route('purchases.index')->with('info', 'Pembelian ini sudah lunas dan tidak bisa dikonfirmasi ulang.');
+        }
+
+        return view('Purchases.confirm', compact('purchase'));
+    }
+
+
+    public function confirmation(Request $request, $id)
+    {
+        $purchase = Purchase::with('purchaseItems')->findOrFail($id);
+
+        $request->validate([
+            'amount_paid' => 'required|numeric|min:0',
+            'note' => 'nullable|string|max:255',
+            'payment_methode' => 'required|in:cash,credit'
+        ]);
+
+        $amountPaid = $request->input('amount_paid');
+        $grandTotal = $purchase->grand_total;
+
+        // Tentukan status pembayaran
+        if ($amountPaid == 0) {
+            $status = 'unpaid';
+        } elseif ($amountPaid < $grandTotal) {
+            $status = 'partial';
+        } else {
+            $status = 'paid';
+        }
+
+        $paymentMethod = $request->input('payment_methode');
+
+        // Simpan ke purchase_payments
+        PurchasePayment::create([
+            'purchase_id' => $purchase->id,
+            'amount' => $amountPaid,
+            'payment_date' => now(),
+            'payment_methode' => $paymentMethod,
+            'note' => $request->note,
+        ]);
+
+        // Simpan ke accounts_payable
+        AccountsPayable::create([
+            'supplier_id' => $purchase->supplier_id,
+            'purchase_id' => $purchase->id,
+            'amount_due' => $grandTotal,
+            'amount_paid' => $amountPaid,
+            'due_date' => now()->addDays(30),
+            'payment_methode' => $paymentMethod,
+            'status' => $status,
+        ]);
+
+        // Update status di tabel purchases
+        $purchase->update([
+            'payment_status' => $status,
+        ]);
+
+        // Tambah stok produk (jika belum ditambah sebelumnya)
+        foreach ($purchase->purchaseItems as $item) {
+            $product = Products::find($item->product_id);
+            if ($product) {
+                $product->stock += $item->quantity;
+                $product->save();
+            }
+        }
+
+        return redirect()->route('purchases.index')
+            ->with('success', 'Pembelian dikonfirmasi dan disimpan.')
+            ->with('purchase_id', $purchase->id);
     }
 }

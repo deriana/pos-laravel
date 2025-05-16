@@ -11,12 +11,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const grandTotalElement = document.getElementById("grand-total");
     const changeElement = document.getElementById("change");
     const discountInput = document.getElementById("discount");
-    const amountPaidInput = document.getElementById("amount_paid");
 
     // Fungsi untuk menghitung total
     function calculateTotal() {
         let grandTotal = 0;
-        const amountPaid = parseFloat(amountPaidInput.value) || 0;
+        const amountPaid = 0;
 
         // Menghitung subtotal untuk setiap produk
         const cartItems = document.querySelectorAll(".cart-item");
@@ -54,8 +53,8 @@ document.addEventListener("DOMContentLoaded", function () {
         // Menghitung dan menampilkan Kembalian
         const change = amountPaid - totalWithTax;
         changeElement.textContent = `Rp ${change < 0
-                ? 0
-                : change.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
+            ? 0
+            : change.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, "$&,")
             }`;
     }
 

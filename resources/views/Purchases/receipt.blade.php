@@ -148,12 +148,14 @@
             </tr>
 
             <tr class="heading" style="background: #eee; border-bottom: 1px solid #ddd;">
-                <td style="padding: 5px;">Payment Method</td>
+                <td style="padding: 5px;">
+                    Payment Method 
+                </td>
                 <td style="padding: 5px; text-align: right;">Amount Paid</td>
             </tr>
 
             <tr class="details">
-                <td style="padding: 5px;">{{ ucfirst($purchase->payment_status) }}</td>
+                <td style="padding: 5px;">{{ $purchase->payments->first()?->payment_methode ?? '-' }}</td>
                 <td style="padding: 5px; text-align: right;">
                     @php
                         $totalPaid = $purchase->payments->sum('amount');
@@ -194,9 +196,9 @@
             </tr>
 
             <tr class="total" style="font-weight: bold;">
-                <td style="padding: 5px; text-align: right;">Pajak ({{ $purchase->tax }}%):</td>
+                <td style="padding: 5px; text-align: right;">Pajak (11%)</td>
                 <td style="padding: 5px; text-align: right;">
-                    Rp {{ number_format(($purchase->total * $purchase->tax) / 100, 2, ',', '.') }}
+                    Rp {{ number_format($purchase->tax, 2, ',', '.') }}
                 </td>
             </tr>
 

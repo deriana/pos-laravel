@@ -60,8 +60,8 @@
                                     </button>
                                 </div>
                             </div>
-                            </div>
-                        @endforeach
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -111,17 +111,8 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="payment_methode" class="form-label fw-semibold">Metode Pembayaran</label>
-                        <select name="payment_methode" id="payment_methode" class="form-select">
-                            <option value="cash">Cash</option>
-                            <option value="credit">Kredit</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-4">
                         <label for="payment_date" class="form-label fw-semibold">Tanggal Pembayaran</label>
-                        <input type="date" name="payment_date" class="form-control" id="payment_date"
-                            value="now">
+                        <input type="date" name="payment_date" class="form-control" id="payment_date" value="now">
                     </div>
 
                     <div class="mb-4">
@@ -129,24 +120,12 @@
                         <textarea name="note" class="form-control" id="note" rows="3"
                             placeholder="Masukkan catatan tambahan"></textarea>
                     </div>
+
                     <div class="mb-4">
-                        <label for="amount_paid" class="form-label fw-semibold">Jumlah Dibayar</label>
-                        <input type="number" id="amount_paid" name="amount_paid" class="form-control" min="0"
-                            placeholder="Masukkan Jumlah yang Dibayar" oninput="calculateTotal()">
+                        <h5>Grand Total</h5>
+                        <p id="grand-total">Rp 0</p>
                     </div>
-
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div class="mb-4">
-                            <h5>Grand Total</h5>
-                            <p id="grand-total">Rp 0</p>
-                        </div>
-
-                        <div class="mb-4">
-                            <h5>Kembalian</h5>
-                            <p id="change">Rp 0</p>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn btn-success w-100">Simpan Transaksi</button>
+                    <button type="submit" class="btn btn-success w-100">Proceed</button>
                 </form>
             </div>
         </div>
@@ -154,32 +133,32 @@
 
     @push('script')
         <script src="{{ asset('js/transactions/purchase.js') }}"></script>
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const toggleBtn = document.getElementById('toggleSidebarBtn');
-                    const sidebar = document.getElementById('sidebar');
-                    const mainContent = document.getElementById('mainContent');
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const toggleBtn = document.getElementById('toggleSidebarBtn');
+                const sidebar = document.getElementById('sidebar');
+                const mainContent = document.getElementById('mainContent');
 
-                    toggleBtn.addEventListener('click', function() {
-                        if (sidebar.style.display === 'none') {
-                            // Show sidebar
-                            sidebar.style.display = 'block';
-                            // Ubah mainContent kembali ke col-md-8
-                            mainContent.classList.remove('col-md-12');
-                            mainContent.classList.add('col-md-6');
+                toggleBtn.addEventListener('click', function() {
+                    if (sidebar.style.display === 'none') {
+                        // Show sidebar
+                        sidebar.style.display = 'block';
+                        // Ubah mainContent kembali ke col-md-8
+                        mainContent.classList.remove('col-md-12');
+                        mainContent.classList.add('col-md-6');
 
-                            toggleBtn.textContent = 'Sembunyikan Sidebar';
-                        } else {
-                            // Hide sidebar
-                            sidebar.style.display = 'none';
-                            // Buat mainContent full width col-md-12
-                            mainContent.classList.remove('col-md-6');
-                            mainContent.classList.add('col-md-12');
+                        toggleBtn.textContent = 'Sembunyikan Sidebar';
+                    } else {
+                        // Hide sidebar
+                        sidebar.style.display = 'none';
+                        // Buat mainContent full width col-md-12
+                        mainContent.classList.remove('col-md-6');
+                        mainContent.classList.add('col-md-12');
 
-                            toggleBtn.textContent = 'Tampilkan Sidebar';
-                        }
-                    });
+                        toggleBtn.textContent = 'Tampilkan Sidebar';
+                    }
                 });
-            </script>
+            });
+        </script>
     @endpush
 @endsection

@@ -36,6 +36,17 @@
                     });
                 </script>
             @endif
+            @if (session('info'))
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'Info',
+                        text: '{{ session('info') }}',
+                        confirmButtonText: 'OK'
+                    });
+                </script>
+            @endif
             {{-- Filter Status --}}
             <form method="GET" class="mb-4">
                 <div class="form-group row">
@@ -172,11 +183,10 @@
                                                                     {{ ucfirst($account->status) }}
                                                                     @if ($account->status !== 'paid')
                                                                         <div class="mt-2">
-                                                                            <button class="btn btn-sm btn-warning"
-                                                                                data-bs-toggle="modal"
-                                                                                data-bs-target="#payDebtModal{{ $account->id }}">
+                                                                            <a href="{{ route('debt.confirmPayment', $account->id) }}"
+                                                                                class="btn btn-sm btn-warning">
                                                                                 <i class="bi bi-cash-coin"></i> Bayar Hutang
-                                                                            </button>
+                                                                            </a>
                                                                         </div>
                                                                     @endif
                                                                 </td>
@@ -193,50 +203,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Modal untuk Bayar Hutang -->
-            @foreach ($purchases as $purchase)
-                @foreach ($purchase->accountsPayable as $account)
-                    <div class="modal fade" id="payDebtModal{{ $account->id }}" tabindex="-1"
-                        aria-labelledby="payDebtModalLabel{{ $account->id }}" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <form method="POST" action="{{ route('purchase.pay.debt', $account->id) }}">
-                                @csrf
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">Bayar Hutang</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-3">
-                                            <label for="amount" class="form-label">Jumlah Bayar</label>
-                                            <input type="number" name="amount" class="form-control" required
-                                                min="1" step="0.01">
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="payment_method" class="form-label">Metode Pembayaran</label>
-                                            <select name="payment_method" class="form-control">
-                                                <option value="cash">Cash</option>
-                                                <option value="credit">Credit</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="payment_date" class="form-label">Tanggal Bayar</label>
-                                            <input type="date" name="payment_date" class="form-control"
-                                                value="{{ now()->format('Y-m-d') }}">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Bayar</button>
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Batal</button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
-            @endforeach
         </div>
     </div>
 @endsection

@@ -16,12 +16,12 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
             $table->date('sale_date');
-            $table->string('invoice_number');
-            $table->decimal('total', 15,2);
-            $table->decimal('discount', 15,2);
-            $table->decimal('tax', 15,2);
-            $table->decimal('grand_total', 15,2);
-            $table->enum('payment_status', ['paid', 'partial', 'unpaid']);
+            $table->string('invoice_number')->unique();
+            $table->decimal('total', 15,2)->nullable();
+            $table->decimal('discount', 15,2)->nullable();
+            $table->decimal('tax', 15,2)->nullable();
+            $table->decimal('grand_total', 15,2)->nullable();
+            $table->enum('payment_status', ['paid', 'partial', 'unpaid'])->default('unpaid');
             $table->text('note')->nullable();
             $table->timestamps();
         });
