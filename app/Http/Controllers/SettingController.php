@@ -42,7 +42,7 @@ class SettingController extends Controller
         Cache::forget('setting_TAX');
         Cache::forget('setting_APP_LOGO');
 
-        Artisan::call('config:clear');
+        // Artisan::call('config:clear');
 
         return redirect()->route('settings.edit')->with('success', 'Settings updated successfully.');
     }
