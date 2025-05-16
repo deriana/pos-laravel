@@ -114,7 +114,7 @@
                                                                 <td>{{ $item->product->name ?? 'Produk Terhapus' }}</td>
                                                                 <td>{{ $item->quantity }}</td>
                                                                 <td>Rp{{ number_format($item->price, 0, ',', '.') }}</td>
-                                                                <td>Rp{{ number_format($item->subtotal, 0, ',', '.') }}
+                                                                <td>Rp{{ number_format($item->sub_total, 0, ',', '.') }}
                                                                 </td>
                                                             </tr>
                                                         @endforeach
