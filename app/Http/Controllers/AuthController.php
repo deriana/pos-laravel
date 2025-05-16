@@ -17,7 +17,7 @@ class AuthController extends Controller
 {
     public function showRegisterForm()
     {
-        return view('auth.register');
+        return view('Auth.register');
     }
 
     public function register(Request $request)
@@ -276,7 +276,7 @@ class AuthController extends Controller
             'new_email' => 'required|email|unique:users,email',
         ]);
     
-        $user = auth()->user();
+        $user = Auth::user();
     
         if ($request->current_email !== $user->email) {
             return back()->withErrors(['current_email' => 'Current email does not match.']);
