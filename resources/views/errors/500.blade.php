@@ -43,11 +43,11 @@
     />
 
     <!-- Icons. Uncomment required icon fonts -->
-    <link rel="stylesheet" href="{{ asset('vendor')}}/fonts/boxicons.css" />
+    <link rel="stylesheet" href="{{ asset('vendor') }}/fonts/boxicons.css" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('vendor')}}/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('vendor')}}/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('vendor') }}/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('vendor') }}/css/theme-default.css" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ asset('css') }}/demo.css" />
 
     <!-- Vendors CSS -->
@@ -68,19 +68,19 @@
     <!-- Content -->
 
     <!-- Error -->
-    <div class="container-xxl container-p-y">
+ <div class="container-xxl container-p-y">
       <div class="misc-wrapper">
-        <h2 class="mb-2 mx-2">Page Not Found :(</h2>
-        <p class="mb-4 mx-2">Oops! 😖 The requested URL was not found on this server.</p>
-        <a href="/" class="btn btn-primary">Back to home</a>
-        <div class="mt-3">
+      <h2 class="mb-2 mx-2">500 - Kesalahan Server!</h2>
+      <p class="mb-4 mx-2">Terjadi kesalahan internal di server. Silakan coba beberapa saat lagi.</p>
+        <a href="{{ route('dashboard') }}" class="btn btn-primary">Buack to home</a>
+        <div class="mt-4">
           <img
-            src="{{ asset('img') }}/illustrations/page-misc-error-light.png"
-            alt="page-misc-error-light"
+            src="{{ asset('img/illustrations/girl-doing-yoga-light.png') }}"
+            alt="girl-doing-yoga-light"
             width="500"
             class="img-fluid"
-            data-app-dark-img="illustrations/page-misc-error-dark.png"
-            data-app-light-img="illustrations/page-misc-error-light.png"
+            data-app-dark-img="illustrations/girl-doing-yoga-dark.png"
+            data-app-light-img="illustrations/girl-doing-yoga-light.png"
           />
         </div>
       </div>

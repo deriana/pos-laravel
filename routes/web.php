@@ -24,7 +24,7 @@ Route::middleware([CheckAuthenticated::class])->group(function () {
     Route::get('/', [DashboardController::class, 'showDashboard'])->name('dashboard');
 
     Route::fallback(function () {
-        return view('error.not-found');
+        return view('errors.not-found');
     });
 
     Route::get('storage/images/{filename}', [ImageController::class, 'showImage']);
@@ -46,7 +46,7 @@ Route::middleware([CheckAuthenticated::class])->group(function () {
     // Route::post('/checkout', [CartController::class, 'store'])->name('cart.store');
     Route::resource('/sales', SaleController::class);
     Route::resource('/purchases', PurchaseController::class);
-    
+
     Route::middleware([CheckRole::class])->group(function () {
         Route::resource('/suppliers', SupplierController::class);
         Route::resource('/customers', CustomerController::class);
