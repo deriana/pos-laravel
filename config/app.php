@@ -14,7 +14,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    'tax' => env('TAX', 0.11),
+    'tax' => env('TAX', 11),
     'logo' => env('APP_LOGO', 'image.jpeg'),
 
 
