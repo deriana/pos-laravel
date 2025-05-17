@@ -8,7 +8,7 @@ class ImageController extends Controller
 {
     public function showImage($filename)
     {
-        $path = storage_path("app/private/images/{$filename}");
+        $path = storage_path("app/private/public/images/{$filename}");
 
         if (file_exists($path)) {
             return response()->file($path);
