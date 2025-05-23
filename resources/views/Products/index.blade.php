@@ -134,7 +134,7 @@
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="barCodeModalLabel{{ $product->id }}">barCode Code for
+                                <h5 class="modal-title" id="barCodeModalLabel{{ $product->id }}">BarCode Code for
                                     {{ $product->name }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
@@ -155,7 +155,11 @@
                                         Print
                                     </button>
                                 @else
-                                    <button class="btn btn-success">Generate Barcode</button>
+                                    <form action="{{ route('products.generateBarcode', $product->id) }}" method="POST"
+                                        style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success">Generate Barcode</button>
+                                    </form>
                                 @endif
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>

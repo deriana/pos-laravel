@@ -97,6 +97,32 @@ class ProductsController extends Controller
         return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
+    public function generateBarcode($id)
+    {
+        $product = Products::findOrFail($id);
+
+        // Cek apakah sudah ada barcode
+        if ($product->barCode) {
+            return back()->with('info', 'Barcode sudah ada untuk produk ini.');
+        }
+
+        // Generate barcode PNG dari SKU
+        $barcodeGenerator = new DNS1D();
+        $barcodePNG = $barcodeGenerator->getBarcodePNG($product->sku, 'C128');
+
+        // Simpan sebagai file PNG
+        $barcodeFileName = 'barcode-' . uniqid() . '.png';
+        Storage::put("public/barcodes/{$barcodeFileName}", base64_decode($barcodePNG));
+
+        // Simpan ke database
+        BarCode::create([
+            'product_id' => $product->id,
+            'filename' => $barcodeFileName
+        ]);
+
+        return back()->with('success', 'Barcode berhasil digenerate.');
+    }
+
     // Tampilkan form untuk edit produk
     public function edit($id)
     {
