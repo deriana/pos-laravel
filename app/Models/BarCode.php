@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class QrCode  extends Model
+class BarCode  extends Model
 {
     protected $fillable = [
         'product_id',
@@ -16,5 +16,5 @@ class QrCode  extends Model
         return $this->belongsTo(Products::class, 'product_id');
     }
 
-    protected $table = 'qr_codes';
+    protected $table = 'barcode';
 }

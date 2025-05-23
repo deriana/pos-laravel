@@ -112,8 +112,8 @@
                             <a href="{{ route('products.edit', $product->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             {{-- <button class="btn btn-sm btn-primary">Add To Cart <i class='tf-icons bx bx-cart'></i></button> --}}
                             <button class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                data-bs-target="#qrModal{{ $product->id }}">
-                                View QR
+                                data-bs-target="#barCodeModal{{ $product->id }}">
+                                View BarCode
                             </button>
                             <form id="delete-form-{{ $product->id }}"
                                 action="{{ route('products.destroy', $product->id) }}" method="POST"
@@ -129,24 +129,35 @@
 
                 </div>
 
-                <div class="modal fade" id="qrModal{{ $product->id }}" tabindex="-1"
-                    aria-labelledby="qrModalLabel{{ $product->id }}" aria-hidden="true">
+                <div class="modal fade" id="barCodeModal{{ $product->id }}" tabindex="-1"
+                    aria-labelledby="barCodeModalLabel{{ $product->id }}" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="qrModalLabel{{ $product->id }}">QR Code for
+                                <h5 class="modal-title" id="barCodeModalLabel{{ $product->id }}">barCode Code for
                                     {{ $product->name }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
                                     aria-label="Close"></button>
                             </div>
                             <div class="modal-body text-center">
-                                @if ($product->qrCode && $product->qrCode->filename)
-                                    <img src="{{ asset('storage/qr/' . $product->qrCode->filename) }}" alt="QR Code"
-                                        class="img-fluid">
-                                    {{-- <p>{{ $product->qrcode->filename }}</p> --}}
+                                @if ($product->barCode && $product->barCode->filename)
+                                    <img src="{{ asset('storage/barcodes/' . $product->barCode->filename) }}"
+                                        alt="BarCode" class="img-fluid">
+                                    {{-- <p>{{ $product->barCodecode->filename }}</p> --}}
                                 @else
-                                    <p>No QR Code available for this product.</p>
+                                    <p>No BarCode available for this product.</p>
                                 @endif
+                            </div>
+                            <div class="modal-footer">
+                                @if ($product->barCode && $product->barCode->filename)
+                                    <button class="btn btn-primary"
+                                        onclick="printBarcode('{{ asset('storage/barcodes/' . $product->barCode->filename) }}')">
+                                        Print
+                                    </button>
+                                @else
+                                    <button class="btn btn-success">Generate Barcode</button>
+                                @endif
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
@@ -162,6 +173,25 @@
         </div>
     </div>
     <script>
+        function printBarcode(imageUrl) {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+            <html>
+                <head>
+                    <title>Print Barcode</title>
+                    <style>
+                        body { text-align: center; margin-top: 50px; }
+                        img { max-width: 100%; height: auto; }
+                    </style>
+                </head>
+                <body>
+                    <img src="${imageUrl}" onload="window.print(); window.close();">
+                </body>
+            </html>
+        `);
+            printWindow.document.close();
+        }
+
         function confirmDelete(productId) {
             Swal.fire({
                 title: 'Are you sure?',

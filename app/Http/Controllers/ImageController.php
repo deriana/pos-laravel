@@ -21,12 +21,12 @@ class ImageController extends Controller
 
     public function showQrCode($filename)
     {
-        $path = storage_path("app/private/public/qr/{$filename}");
+        $path = storage_path("app/private/public/barcodes/{$filename}");
 
         if (file_exists($path)) {
             return response()->file($path);
         } else {
-            abort(404, 'QR Code not found.');
+            abort(404, 'Barcode Code not found.');
         }
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BarCode;
 use App\Models\Categories;
 use App\Models\Products;
-use App\Models\QrCode as ModelsQrCode;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Milon\Barcode\DNS1D;
 
 class ProductsController extends Controller
 {
@@ -29,7 +29,7 @@ class ProductsController extends Controller
         }
 
         // Memuat relasi 'category' dengan eager loading
-        $products = $query->with('category', 'qrCode')->paginate(6); // Ubah 'categories' menjadi 'category'
+        $products = $query->with('category', 'barCode')->paginate(6); // Ubah 'categories' menjadi 'category'
 
         return view('Products.index', compact('products', 'categories'));
     }
@@ -80,24 +80,22 @@ class ProductsController extends Controller
             'unit' => $request->unit,
         ]);
 
-        $qrContent = $sku; // atau bisa ID, nama produk, dsb
-        $qrFileName = 'qr-' . uniqid() . '.png';
+        $barcodeGenerator = new DNS1D();
+        $barcode = $barcodeGenerator->getBarcodePNG($sku, 'C128');
+        $barcodeFileName = 'barcode-' . uniqid() . '.png';
+        Storage::put("public/barcodes/{$barcodeFileName}", base64_decode($barcode));
 
-        // Simpan QR code sebagai file ke storage/public/qr
-        Storage::put("public/qr/{$qrFileName}", QrCode::format('png')->size(300)->generate($qrContent));
 
-        $qrName = basename($qrFileName);
+        $barName = basename($barcodeFileName);
 
         // Simpan ke tabel qr_codes
-        ModelsQrCode::create([
+        BarCode::create([
             'product_id' => $product->id,
-            'filename' => $qrName
+            'filename' => $barName
         ]);
 
         return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
-
-
 
     // Tampilkan form untuk edit produk
     public function edit($id)

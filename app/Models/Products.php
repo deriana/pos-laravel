@@ -17,9 +17,9 @@ class Products extends Model
     {
         return $this->belongsTo(Categories::class);
     }
-    public function qrCode()
+    public function barCode()
     {
-        return $this->hasOne(QrCode::class, 'product_id');
+        return $this->hasOne(BarCode::class, 'product_id');
     }
     
 }

@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('qr_codes', function (Blueprint $table) {
+        Schema::create('barcode', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->cascadeOnDelete();
-            $table->string('filename'); // atau 'path' tergantung penyimpanan
+            $table->string('filename');
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('qr_codes');
+        //
     }
 };

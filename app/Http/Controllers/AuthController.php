@@ -154,7 +154,7 @@ class AuthController extends Controller
             return redirect('/');
         }
 
-        return back()->withErrors(['email' => 'Invalid credentials.']);
+        return back()->withErrors(['email' => 'Email Atau Password Salah']);
     }
 
     public function showForgotPasswordForm()
