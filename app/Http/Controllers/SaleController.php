@@ -12,6 +12,7 @@ use App\Models\SalePayment;
 use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Twilio\Rest\Client;
 
 class SaleController extends Controller
 {
@@ -278,8 +279,48 @@ class SaleController extends Controller
             }
         }
 
+        if ($sale->customer && $sale->customer->phone_number) {
+            $phone = $this->formatPhoneNumber($sale->customer->phone_number);
+            $productNames = $sale->items->map(function ($item) {
+                return $item->product->name;
+            })->toArray();
+            $productList = implode(', ', $productNames); // gabungkan jadi string "produk1, produk2, produk3"
+
+            $message = "Halo {$sale->customer->name}, transaksi Anda dengan nomor invoice {$sale->invoice_number} berhasil dikonfirmasi.\n";
+            $message .= "Produk yang Anda beli: {$productList}.\n";
+            $message .= "Terima kasih atas kepercayaan Anda!";
+            $this->sendWhatsApp($phone, $message);
+        }
+
         return redirect()->route('sales.index')
             ->with('success', 'Pembelian dikonfirmasi dan disimpan.')
             ->with('sale_id', $sale->id);
+    }
+
+    function sendWhatsApp($to, $message)
+    {
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_AUTH_TOKEN');
+        $from = 'whatsapp:' . env('TWILIO_WHATSAPP_NUMBER');
+        $client = new Client($sid, $token);
+
+        $client->messages->create(
+            'whatsapp:' . $to,
+            [
+                'from' => $from,
+                'body' => $message
+            ]
+        );
+    }
+
+    function formatPhoneNumber($number)
+    {
+        if (substr($number, 0, 1) == '0') {
+            return '+62' . substr($number, 1);
+        }
+        if (substr($number, 0, 3) == '+62') {
+            return $number;
+        }
+        return $number;
     }
 }
