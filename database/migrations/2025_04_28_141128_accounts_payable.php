@@ -20,6 +20,7 @@ return new class extends Migration
             $table->date('due_date');
             $table->enum('payment_methode', ['cash', 'credit']);
             $table->enum('status', ['unpaid', 'partial', 'paid']);
+            $table->timestamps();
         });
     }
 

@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OTP Code - Warung Sunda</title>
     <style>
-        /* Global Styles */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #F4F4F4;
@@ -25,7 +24,7 @@
         }
 
         .header {
-            background-color: #7C4D2F; /* Warna khas Sunda, cokelat muda */
+            background-color: #7C4D2F;
             color: #FFF;
             padding: 20px;
             text-align: center;
@@ -47,7 +46,7 @@
             font-weight: bold;
             color: #7C4D2F;
             padding: 10px 20px;
-            background-color: #FFEB3B; /* Warna kuning hangat */
+            background-color: #FFEB3B; 
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }

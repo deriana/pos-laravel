@@ -3,10 +3,8 @@
 @section('content')
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner py-4">
-            <!-- Change Email Form -->
             <div class="card">
                 <div class="card-body">
-                    <!-- Logo -->
                     <div class="app-brand justify-content-center">
                            <a href="#" class="app-brand-link gap-2">
                               <img src="{{ asset('img/logo/' . config('app.logo')) }}" alt="{{ config('app.name') }}"
@@ -14,7 +12,6 @@
                             <span class="app-brand-text demo text-body fw-bolder">{{ config('app.name') }}</span>
                         </a>
                     </div>
-                    <!-- /Logo -->
                     <h4 class="mb-2">Change Email</h4>
                     <p class="mb-4">Enter your current email and new email to change it.</p>
                     <form action="{{ route('auth.changeEmailPost') }}" method="POST">
@@ -49,7 +46,6 @@
 
                 </div>
             </div>
-            <!-- /Change Email -->
         </div>
     </div>
 @endsection

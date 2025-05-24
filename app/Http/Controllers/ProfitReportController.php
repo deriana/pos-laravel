@@ -11,7 +11,6 @@ class ProfitReportController extends Controller
 {
     public function index(Request $request)
     {
-        // Optional filter tanggal
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
 
@@ -33,7 +32,7 @@ class ProfitReportController extends Controller
             $profit = ($sellingPrice - $purchasePrice) * $quantity;
 
             return [
-                'sale_date' => $item->sale->sale_date,  // tambahkan ini
+                'sale_date' => $item->sale->sale_date, 
                 'product_name' => $productName,
                 'quantity' => $quantity,
                 'purchase_price' => $purchasePrice,

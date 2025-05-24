@@ -3,10 +3,8 @@
 @section('content')
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
-            <!-- Register Card -->
             <div class="card">
                 <div class="card-body">
-                    <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <a href="#" class="app-brand-link gap-2">
                             <img src="{{ asset('img/logo' . config('app.logo')) }}" alt="{{ config('app.name') }}"
@@ -14,14 +12,12 @@
                             <span class="app-brand-text demo text-body fw-bolder">{{ config('app.name') }}</span>
                         </a>
                     </div>
-                    <!-- /Logo -->
                     <h4 class="mb-2">Adventure starts here 🚀</h4>
                     <p class="mb-4">Make your app management easy and fun!</p>
 
                     <form id="formAuthentication" class="mb-3" action="{{ route('auth.register') }}" method="POST">
-                        @csrf <!-- Pastikan untuk menambahkan token CSRF -->
+                        @csrf 
 
-                        <!-- Username -->
                         <div class="mb-3">
                             <label for="name" class="form-label">Username</label>
                             <input type="text" class="form-control @error('name') is-invalid @enderror" id="name"
@@ -31,7 +27,6 @@
                             @enderror
                         </div>
 
-                        <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
@@ -42,7 +37,6 @@
                         </div>
 
 
-                        <!-- Password -->
                         <div class="mb-3 form-password-toggle">
                             <label class="form-label" for="password">Password</label>
                             <div class="input-group input-group-merge">
@@ -56,7 +50,6 @@
                             </div>
                         </div>
 
-                        <!-- Confirm Password -->
                         <div class="mb-3 form-password-toggle">
                             <label class="form-label" for="password_confirmation">Confirm Password</label>
                             <div class="input-group input-group-merge">
@@ -65,7 +58,6 @@
                             </div>
                         </div>
 
-                        <!-- Terms and Conditions -->
                         <div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="terms-conditions" name="terms"
@@ -89,7 +81,6 @@
 
                 </div>
             </div>
-            <!-- Register Card -->
         </div>
     </div>
 @endsection

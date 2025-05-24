@@ -3,10 +3,8 @@
 @section('content')
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner py-4">
-            <!-- Forgot Password -->
             <div class="card">
                 <div class="card-body">
-                    <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <a href="#" class="app-brand-link gap-2">
                             <img src="{{ asset('img/logo/' . config('app.logo')) }}" alt="{{ config('app.name') }}"
@@ -14,12 +12,10 @@
                             <span class="app-brand-text demo text-body fw-bolder">{{ config('app.name') }}</span>
                         </a>
                     </div>
-                    <!-- /Logo -->
                     <h4 class="mb-2">Verify Email? 🔒</h4>
                     <form action="{{ url('verify-otp') }}" method="POST">
                         @csrf
 
-                        <!-- OTP Input -->
                         <div class="mb-3">
                             <label for="otp" class="form-label">Enter OTP</label>
                             <input type="text" name="otp" id="otp"
@@ -29,11 +25,9 @@
                             @enderror
                         </div>
 
-                        <!-- Verify OTP Button -->
                         <button type="submit" class="btn btn-primary d-grid w-100">Verify OTP</button>
                     </form>
 
-                    <!-- Resend OTP Button -->
                     <div class="text-center mt-3">
                         <form action="{{ url('resend-otp') }}" method="POST">
                             @csrf
@@ -43,7 +37,6 @@
 
                 </div>
             </div>
-            <!-- /Forgot Password -->
         </div>
     </div>
 @endsection

@@ -10,7 +10,6 @@ class CartController extends Controller
     {
         $cart = $request->input('cart');
 
-        // Simpan ke session
         session(['checkout_cart' => $cart]);
 
         return redirect()->route('sales.create');

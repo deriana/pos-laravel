@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('payment_date');
             $table->enum('payment_methode', ['cash', 'credit']);
             $table->text('note')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -18,30 +18,25 @@ class ProductsController extends Controller
 
         $query = Products::query();
 
-        // Jika ada query pencarian nama produk
         if ($request->has('search') && $request->search != '') {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        // Jika ada filter berdasarkan kategori
         if ($request->has('category') && $request->category != '') {
             $query->where('category_id', $request->category);
         }
 
-        // Memuat relasi 'category' dengan eager loading
-        $products = $query->with('category', 'barCode')->paginate(6); // Ubah 'categories' menjadi 'category'
+        $products = $query->with('category', 'barCode')->paginate(6);
 
         return view('Products.index', compact('products', 'categories'));
     }
 
-    // Tampilkan form untuk menambah produk
     public function create()
     {
-        $categories = Categories::all();  // Mengambil semua kategori untuk dropdown
+        $categories = Categories::all(); 
         return view('Products.create', compact('categories'));
     }
 
-    // Simpan produk baru
     public function store(Request $request)
     {
         $request->validate([
@@ -54,27 +49,21 @@ class ProductsController extends Controller
             'unit' => 'required|string|max:50',
         ]);
 
-        // Generate SKU otomatis jika tidak ada
         $sku = $request->sku ?: strtoupper('PROD-' . Str::random(8));
 
-        // Proses file gambar
         if ($request->hasFile('product_image')) {
             $image = $request->file('product_image');
-            // Simpan gambar di storage/public/images dan ambil nama file
             $imagePath = $image->storeAs('public/images', uniqid() . '.' . $image->getClientOriginalExtension());
-            // Ambil nama file yang sudah disimpan (untuk disimpan di DB)
             $imageName = basename($imagePath);
         } else {
-            // Jika tidak ada file, set default null atau sesuai kebutuhan
             $imageName = null;
         }
 
-        // Simpan produk
         $product = Products::create([
             'category_id' => $request->category_id,
             'name' => $request->name,
             'sku' => $sku,
-            'product_image' => $imageName,  // Simpan nama file
+            'product_image' => $imageName, 
             'purchase_price' => $request->purchase_price,
             'selling_price' => $request->selling_price,
             'unit' => $request->unit,
@@ -88,7 +77,6 @@ class ProductsController extends Controller
 
         $barName = basename($barcodeFileName);
 
-        // Simpan ke tabel qr_codes
         BarCode::create([
             'product_id' => $product->id,
             'filename' => $barName
@@ -101,20 +89,16 @@ class ProductsController extends Controller
     {
         $product = Products::findOrFail($id);
 
-        // Cek apakah sudah ada barcode
         if ($product->barCode) {
             return back()->with('info', 'Barcode sudah ada untuk produk ini.');
         }
 
-        // Generate barcode PNG dari SKU
         $barcodeGenerator = new DNS1D();
         $barcodePNG = $barcodeGenerator->getBarcodePNG($product->sku, 'C128');
 
-        // Simpan sebagai file PNG
         $barcodeFileName = 'barcode-' . uniqid() . '.png';
         Storage::put("public/barcodes/{$barcodeFileName}", base64_decode($barcodePNG));
 
-        // Simpan ke database
         BarCode::create([
             'product_id' => $product->id,
             'filename' => $barcodeFileName
@@ -123,7 +107,6 @@ class ProductsController extends Controller
         return back()->with('success', 'Barcode berhasil digenerate.');
     }
 
-    // Tampilkan form untuk edit produk
     public function edit($id)
     {
         $product = Products::findOrFail($id);
@@ -131,7 +114,6 @@ class ProductsController extends Controller
         return view('Products.edit', compact('product', 'categories'));
     }
 
-    // Update data produk
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -146,31 +128,24 @@ class ProductsController extends Controller
 
         $product = Products::findOrFail($id);
 
-        // Update SKU jika ada perubahan, jika tidak, tetap menggunakan SKU yang lama
         $sku = $request->sku ?: $product->sku;
 
-        // Menangani upload gambar jika ada gambar baru
         if ($request->hasFile('product_image')) {
-            // Hapus gambar lama jika ada
             if ($product->product_image && file_exists(storage_path('app/public/images/' . $product->product_image))) {
                 unlink(storage_path('app/public/images/' . $product->product_image));
             }
 
-            // Simpan gambar baru
             $imagePath = $request->file('product_image')->store('public/images');
-            // Ambil nama file untuk disimpan di database
-            $imageName = basename($imagePath); // Ambil nama file saja
+            $imageName = basename($imagePath); 
         } else {
-            // Jika tidak ada gambar baru, gunakan gambar lama
             $imageName = $product->product_image;
         }
 
-        // Update data produk
         $product->update([
             'category_id' => $request->category_id,
             'name' => $request->name,
             'sku' => $sku,
-            'product_image' => $imageName, // Menyimpan nama file gambar
+            'product_image' => $imageName,
             'purchase_price' => $request->purchase_price,
             'selling_price' => $request->selling_price,
             'unit' => $request->unit,
@@ -180,15 +155,12 @@ class ProductsController extends Controller
     }
 
 
-    // Hapus produk
     public function destroy($id)
     {
         $product = Products::findOrFail($id);
 
-        // Hapus gambar produk dari storage
         Storage::delete($product->product_image);
 
-        // Hapus produk dari database
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');

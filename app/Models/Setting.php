@@ -16,7 +16,6 @@ class Setting extends Model
 public static function getValue($key, $default = null)
 {
     try {
-        // Cek dulu tabel settings ada gak
         if (!Schema::hasTable('settings')) {
             return $default;
         }
@@ -25,7 +24,6 @@ public static function getValue($key, $default = null)
             return self::where('key', $key)->value('value') ?? $default;
         });
     } catch (QueryException $e) {
-        // Jika error query, bisa return default agar gak crash
         return $default;
     }
 }

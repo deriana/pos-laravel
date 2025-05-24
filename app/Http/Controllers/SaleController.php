@@ -19,7 +19,7 @@ class SaleController extends Controller
 
     public function index()
     {
-        $perPage = request('per_page', 10); // default 10 jika tidak ada parameter
+        $perPage = request('per_page', 10); 
 
         $purchases = Sale::with([
             'customer',
@@ -34,7 +34,7 @@ class SaleController extends Controller
             })
             ->latest()
             ->paginate($perPage)
-            ->withQueryString(); // agar parameter tetap ada saat pindah halaman
+            ->withQueryString(); 
 
         return view('Sales.index', compact('purchases'));
     }
@@ -88,7 +88,6 @@ class SaleController extends Controller
             'note' => 'nullable|string|max:255',
         ]);
 
-        // customer handling
         if ($request->filled('customer_id')) {
             $customerId = $request->customer_id;
         } else {
@@ -114,7 +113,7 @@ class SaleController extends Controller
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
                 'subtotal' => $subtotal,
-                'product' => Products::find($product['id']), // Untuk dapatkan nama dan info produk di view
+                'product' => Products::find($product['id']), 
             ];
         }
 
@@ -179,7 +178,7 @@ class SaleController extends Controller
         $account = AccountsReceivable::findOrFail($id);
         $sale = $account->sale;
 
-        // Tambah pembayaran ke tabel sale_payments
+        
         SalePayment::create([
             'sale_id' => $sale->id,
             'amount' => $request->amount_paid,
@@ -188,10 +187,10 @@ class SaleController extends Controller
             'note' => 'Pembayaran hutang',
         ]);
 
-        // Update jumlah yang sudah dibayar
+        
         $account->amount_paid += $request->amount_paid;
 
-        // Tentukan status
+        
         if ($account->amount_paid >= $account->amount_due) {
             $account->status = 'paid';
             $sale->payment_status = 'paid';
@@ -213,7 +212,6 @@ class SaleController extends Controller
         $sale = Sale::with(['items.product', 'user', 'customer'])->findOrFail($id);
 
         if ($sale->payment_status === 'paid') {
-            // Redirect ke index jika sudah lunas
             return redirect()->route('sales.index')->with('info', 'Pembelian ini sudah lunas dan tidak bisa dikonfirmasi ulang.');
         }
 
@@ -234,7 +232,6 @@ class SaleController extends Controller
         $amountPaid = $request->input('amount_paid');
         $grandTotal = $sale->grand_total;
 
-        // Tentukan status pembayaran
         if ($amountPaid == 0) {
             $status = 'unpaid';
         } elseif ($amountPaid < $grandTotal) {
@@ -245,7 +242,6 @@ class SaleController extends Controller
 
         $paymentMethod = $request->input('payment_methode');
 
-        // Simpan ke sale_payments
         SalePayment::create([
             'sale_id' => $sale->id,
             'amount' => $amountPaid,
@@ -254,7 +250,6 @@ class SaleController extends Controller
             'note' => $request->note,
         ]);
 
-        // Simpan ke accounts_payable
         AccountsReceivable::create([
             'customer_id' => $sale->customer_id,
             'sale_id' => $sale->id,
@@ -265,12 +260,10 @@ class SaleController extends Controller
             'status' => $status,
         ]);
 
-        // Update status di tabel sales
         $sale->update([
             'payment_status' => $status,
         ]);
 
-        // Tambah stok produk (jika belum ditambah sebelumnya)
         foreach ($sale->items as $item) {
             $product = Products::find($item->product_id);
             if ($product) {
@@ -284,7 +277,7 @@ class SaleController extends Controller
             $productNames = $sale->items->map(function ($item) {
                 return $item->product->name;
             })->toArray();
-            $productList = implode(', ', $productNames); // gabungkan jadi string "produk1, produk2, produk3"
+            $productList = implode(', ', $productNames); 
 
             $message = "Halo {$sale->customer->name}, transaksi Anda dengan nomor invoice {$sale->invoice_number} berhasil dikonfirmasi.\n";
             $message .= "Produk yang Anda beli: {$productList}.\n";

@@ -27,7 +27,6 @@ class SalesReportController extends Controller
 
     public function export(Request $request)
     {
-        // Optional: bisa kirim param per_page juga, atau export semua
         return Excel::download(new SalesReportExport(), 'sales_report.xlsx');
     }
 }

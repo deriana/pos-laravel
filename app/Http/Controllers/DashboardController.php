@@ -17,9 +17,8 @@ class DashboardController extends Controller
     public function showDashboard()
     {
 
-        // Penjualan per hari minggu ini (Senin - Minggu)
-        $startOfWeek = Carbon::now()->startOfWeek(); // Senin
-        $endOfWeek = Carbon::now()->endOfWeek();     // Minggu
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = Carbon::now()->endOfWeek();    
 
         $salesWeek = Sale::select(DB::raw('DAYNAME(created_at) as day_name'), DB::raw('SUM(grand_total) as total'))
             ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
@@ -27,15 +26,12 @@ class DashboardController extends Controller
             ->get()
             ->keyBy('day_name');
 
-        // Mapping hari supaya urut Sen-Sab-Ming
         $weekLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
         $weekSalesData = [];
         foreach ($weekLabels as $day) {
             $weekSalesData[] = $salesWeek->has($day) ? (int)$salesWeek[$day]->total : 0;
         }
-        // Kamu bisa ubah nama hari ke bahasa Indonesia nanti di frontend
 
-        // Penjualan per minggu bulan ini (minggu 1 sampai 5)
         $startOfMonth = Carbon::now()->startOfMonth();
         $endOfMonth = Carbon::now()->endOfMonth();
 
@@ -51,7 +47,6 @@ class DashboardController extends Controller
             $monthSalesData[] = $salesMonth->has($i) ? (int)$salesMonth[$i]->total : 0;
         }
 
-        // Penjualan per bulan tahun ini
         $startOfYear = Carbon::now()->startOfYear();
         $endOfYear = Carbon::now()->endOfYear();
 
@@ -67,18 +62,13 @@ class DashboardController extends Controller
             $yearSalesData[] = $salesYear->has($i) ? (int)$salesYear[$i]->total : 0;
         }
 
-        // Ambil semua produk
         $products = Products::paginate(5);
         $sales = Sale::orderBy('grand_total')->paginate(5);
 
-        // Hitung total penjualan per produk (join atau groupBy sale_items)
         $topSales = SaleItem::select('product_id', DB::raw('SUM(quantity) as total_sold'))
             ->groupBy('product_id')
             ->pluck('total_sold', 'product_id');
-        // hasilnya: [product_id => total_sold, ...]
 
-        // Buat collection produk dengan info tambahan total_sold dan tipe produk (top/low/all)
-        // $products adalah paginator
         $products->setCollection(
             $products->getCollection()->map(function ($product) use ($topSales) {
                 $totalSold = $topSales->get($product->id, 0);
@@ -98,7 +88,6 @@ class DashboardController extends Controller
             })
         );
 
-        // Total produk, stok rendah, profit, dsb tetap sama
         $totalProducts = $products->count();
         $lowStockProducts = $products->where('stock', '<', 5)->count();
 

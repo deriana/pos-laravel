@@ -16,12 +16,10 @@ class InventoryReportController extends Controller
 
         $query = Products::with('category');
 
-        // Filter kategori
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // Search nama atau sku
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
@@ -30,7 +28,6 @@ class InventoryReportController extends Controller
             });
         }
 
-        // Sorting stock
         if ($request->filled('stock_sort')) {
             $stockSort = $request->stock_sort;
             if (in_array($stockSort, ['asc', 'desc'])) {

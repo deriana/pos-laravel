@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Purchase;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\PurchasesExport; // nanti buat export ini
+use App\Exports\PurchasesExport; 
 
 class PurchaseReportController extends Controller
 {

@@ -14,7 +14,6 @@ class ImageController extends Controller
             return response()->file($path);
         }
 
-        // Fallback ke image default jika tidak ditemukan
         return response()->file(public_path('img/box-icon.jpg'));
     }
 

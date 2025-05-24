@@ -3,14 +3,11 @@
 @section('content')
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner">
-            <!-- Register -->
             <div class="card">
                 <div class="card-body">
-                    <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <h1>{{ config('app.name') }}</h1>
                     </div>
-                    <!-- /Logo -->
                     <h4 class="mb-2">Welcome to {{ config('app.name') }}</h4>
                     <p class="mb-4">Please sign-in to your account and start the economy</p>
 
@@ -27,7 +24,6 @@
                             @enderror
                         </div>
 
-                        <!-- Password -->
                         <div class="mb-3 form-password-toggle">
                             <div class="d-flex justify-content-between">
                                 <label class="form-label" for="password">Password</label>
@@ -46,7 +42,6 @@
                             </div>
                         </div>
 
-                        <!-- Remember Me -->
                         <div class="mb-3">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="remember-me" name="remember" />
@@ -54,7 +49,6 @@
                             </div>
                         </div>
 
-                        <!-- Sign In Button -->
                         <div class="mb-3">
                             <button class="btn btn-primary d-grid w-100" type="submit">Sign in</button>
                         </div>
@@ -69,7 +63,6 @@
 
                 </div>
             </div>
-            <!-- /Register -->
         </div>
     </div>
 @endsection

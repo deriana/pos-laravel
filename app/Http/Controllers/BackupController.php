@@ -15,7 +15,6 @@ class BackupController extends Controller
         $fileName = 'backup-' . date('Y-m-d_H-i-s') . '.sql';
         $path = storage_path('app/backups/' . $fileName);
 
-        // Pastikan folder backups ada
         if (!file_exists(storage_path('app/backups'))) {
             mkdir(storage_path('app/backups'), 0755, true);
         }

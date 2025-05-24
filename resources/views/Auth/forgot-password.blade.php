@@ -3,10 +3,8 @@
 @section('content')
     <div class="authentication-wrapper authentication-basic container-p-y">
         <div class="authentication-inner py-4">
-            <!-- Forgot Password -->
             <div class="card">
                 <div class="card-body">
-                    <!-- Logo -->
                     <div class="app-brand justify-content-center">
                         <a href="#" class="app-brand-link gap-2">
                               <img src="{{ asset('img/logo/' . config('app.logo')) }}" alt="{{ config('app.name') }}"
@@ -14,7 +12,6 @@
                             <span class="app-brand-text demo text-body fw-bolder">{{ config('app.name') }}</span>
                         </a>
                     </div>
-                    <!-- /Logo -->
                     <h4 class="mb-2">Forgot Password? 🔒</h4>
                     <p class="mb-4">Enter your email and we'll send you instructions to reset your password</p>
                     <form id="formAuthentication" class="mb-3" action="{{ route('password.email') }}" method="POST">
@@ -38,7 +35,6 @@
 
                 </div>
             </div>
-            <!-- /Forgot Password -->
         </div>
     </div>
 @endsection

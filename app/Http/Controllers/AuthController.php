@@ -71,7 +71,6 @@ class AuthController extends Controller
         }
 
         if ($request->otp == $otp) {
-            // OTP valid
             if (session()->has('email_change_user_id')) {
                 $user = User::find(session('email_change_user_id'));
                 if ($user) {
@@ -83,7 +82,6 @@ class AuthController extends Controller
 
                 return redirect()->route('auth.profile')->with('status', 'Email changed successfully!');
             } else {
-                // Verifikasi awal akun
                 $user = User::where('email', $email)->first();
                 if ($user) {
                     $user->is_verified = true;
@@ -103,31 +101,25 @@ class AuthController extends Controller
 
     public function resendOtp(Request $request)
     {
-        // Ambil email dari session
         $email = session('otp_email');
 
-        // Jika tidak ada email di session, arahkan kembali ke login
         if (!$email) {
             return redirect()->route('auth.login')->withErrors(['otp' => 'Session expired. Please register or login again.']);
         }
 
-        // Cari user berdasarkan email
         $user = User::where('email', $email)->first();
 
         if (!$user) {
             return redirect()->route('auth.login')->withErrors(['otp' => 'User not found.']);
         }
 
-        // Generate OTP baru
         $otp = rand(100000, 999999);
 
-        // Kirim OTP via email
         Mail::send('auth.otp-email', ['otp' => $otp], function ($message) use ($user) {
             $message->to($user->email)
                 ->subject('Your New OTP Code');
         });
 
-        // Simpan OTP dan waktu pembuatan ke session
         session([
             'otp' => $otp,
             'otp_generated_at' => time(),
@@ -247,19 +239,16 @@ class AuthController extends Controller
     {
         $user = Auth::user();
 
-        // Validasi data input untuk profil selain email
         $request->validate([
             'name' => 'required|string|max:255',
             'phone_number' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
         ]);
 
-        // Update data profil selain email
         $user->name = $request->name;
         $user->phone_number = $request->phone_number;
         $user->address = $request->address;
 
-        // Simpan perubahan profil tanpa email
         $user->save();
 
         return redirect()->route('auth.profile')->with('status', 'Profile updated successfully!');
@@ -286,15 +275,13 @@ class AuthController extends Controller
 
         $otp = rand(100000, 999999);
 
-        // Simpan data sementara di session
         session([
             'otp' => $otp,
             'otp_generated_at' => time(),
             'otp_email' => $request->new_email,
-            'email_change_user_id' => $user->id, // untuk memastikan hanya dia yang bisa ganti
+            'email_change_user_id' => $user->id, 
         ]);
 
-        // Kirim OTP ke email baru
         Mail::send('auth.otp-email', ['otp' => $otp], function ($message) use ($request) {
             $message->to($request->new_email)
                 ->subject('Your OTP Code for Email Change');

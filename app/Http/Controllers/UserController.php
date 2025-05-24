@@ -25,7 +25,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'name' => 'required|string|max:50|unique:users,name',
             'email' => 'required|email|unique:users,email',
@@ -35,7 +34,6 @@ class UserController extends Controller
             'phone_number' => 'required'
         ]);
 
-        // Buat user baru
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -56,7 +54,6 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-        // Validasi input
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -74,7 +71,6 @@ class UserController extends Controller
             'phone_number' => 'required',
         ]);
 
-        // Update user
         $user->update([
             'name' => $validated['name'],
             'email' => $validated['email'],

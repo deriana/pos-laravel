@@ -18,7 +18,7 @@ class PurchaseController extends Controller
     public function index()
     {
 
-        $perPage = request('per_page', 10); // default 10 jika tidak ada parameter
+        $perPage = request('per_page', 10);
 
         $purchases = Purchase::with([
             'supplier',
@@ -87,7 +87,6 @@ class PurchaseController extends Controller
             'note' => 'nullable|string|max:255',
         ]);
 
-        // Supplier handling
         if ($request->filled('supplier_id')) {
             $supplierId = $request->supplier_id;
         } else {
@@ -113,7 +112,7 @@ class PurchaseController extends Controller
                 'quantity' => $product['quantity'],
                 'price' => $product['price'],
                 'subtotal' => $subtotal,
-                'product' => Products::find($product['id']), // Untuk dapatkan nama dan info produk di view
+                'product' => Products::find($product['id']),
             ];
         }
 
@@ -146,7 +145,6 @@ class PurchaseController extends Controller
             ]);
         }
 
-        // Kirim data ke halaman konfirmasi (dengan compact atau array)
         return redirect()->route('purchases.confirmation', ['id' => $purchase->id]);
     }
 
@@ -179,7 +177,6 @@ class PurchaseController extends Controller
         $account = AccountsPayable::findOrFail($id);
         $purchase = $account->purchase;
 
-        // Tambah pembayaran ke tabel purchase_payments
         PurchasePayment::create([
             'purchase_id' => $purchase->id,
             'amount' => $request->amount_paid,
@@ -188,10 +185,8 @@ class PurchaseController extends Controller
             'note' => 'Pembayaran hutang',
         ]);
 
-        // Update jumlah yang sudah dibayar
         $account->amount_paid += $request->amount_paid;
 
-        // Tentukan status
         if ($account->amount_paid >= $account->amount_due) {
             $account->status = 'paid';
             $purchase->payment_status = 'paid';
@@ -213,7 +208,6 @@ class PurchaseController extends Controller
         $purchase = Purchase::with(['purchaseItems.product', 'user', 'supplier'])->findOrFail($id);
 
         if ($purchase->payment_status === 'paid') {
-            // Redirect ke index jika sudah lunas
             return redirect()->route('purchases.index')->with('info', 'Pembelian ini sudah lunas dan tidak bisa dikonfirmasi ulang.');
         }
 
@@ -234,7 +228,6 @@ class PurchaseController extends Controller
         $amountPaid = $request->input('amount_paid');
         $grandTotal = $purchase->grand_total;
 
-        // Tentukan status pembayaran
         if ($amountPaid == 0) {
             $status = 'unpaid';
         } elseif ($amountPaid < $grandTotal) {
@@ -245,7 +238,6 @@ class PurchaseController extends Controller
 
         $paymentMethod = $request->input('payment_methode');
 
-        // Simpan ke purchase_payments
         PurchasePayment::create([
             'purchase_id' => $purchase->id,
             'amount' => $amountPaid,
@@ -254,7 +246,6 @@ class PurchaseController extends Controller
             'note' => $request->note,
         ]);
 
-        // Simpan ke accounts_payable
         AccountsPayable::create([
             'supplier_id' => $purchase->supplier_id,
             'purchase_id' => $purchase->id,
@@ -265,12 +256,10 @@ class PurchaseController extends Controller
             'status' => $status,
         ]);
 
-        // Update status di tabel purchases
         $purchase->update([
             'payment_status' => $status,
         ]);
 
-        // Tambah stok produk (jika belum ditambah sebelumnya)
         foreach ($purchase->purchaseItems as $item) {
             $product = Products::find($item->product_id);
             if ($product) {
