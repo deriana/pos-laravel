@@ -57,19 +57,19 @@ class AuthController extends Controller
         $request->validate([
             'otp' => 'required|numeric',
         ]);
-    
+
         $otp = session('otp');
         $email = session('otp_email');
         $generatedAt = session('otp_generated_at');
-    
+
         if (!$otp || !$email || !$generatedAt) {
             return redirect()->route('auth.login')->withErrors(['otp' => 'OTP session expired.']);
         }
-    
+
         if (time() - $generatedAt > (5 * 60)) {
             return back()->withErrors(['otp' => 'OTP has expired.']);
         }
-    
+
         if ($request->otp == $otp) {
             // OTP valid
             if (session()->has('email_change_user_id')) {
@@ -78,9 +78,9 @@ class AuthController extends Controller
                     $user->email = $email;
                     $user->save();
                 }
-    
+
                 session()->forget(['otp', 'otp_email', 'otp_generated_at', 'email_change_user_id']);
-    
+
                 return redirect()->route('auth.profile')->with('status', 'Email changed successfully!');
             } else {
                 // Verifikasi awal akun
@@ -89,53 +89,53 @@ class AuthController extends Controller
                     $user->is_verified = true;
                     $user->save();
                 }
-    
+
                 session()->forget(['otp', 'otp_email', 'otp_generated_at']);
-    
+
                 return redirect()->route('auth.login')->with('status', 'Account verified successfully!');
             }
         }
-    
+
         return back()->withErrors(['otp' => 'Invalid OTP code.']);
     }
-    
-    
+
+
 
     public function resendOtp(Request $request)
     {
         // Ambil email dari session
         $email = session('otp_email');
-    
+
         // Jika tidak ada email di session, arahkan kembali ke login
         if (!$email) {
             return redirect()->route('auth.login')->withErrors(['otp' => 'Session expired. Please register or login again.']);
         }
-    
+
         // Cari user berdasarkan email
         $user = User::where('email', $email)->first();
-    
+
         if (!$user) {
             return redirect()->route('auth.login')->withErrors(['otp' => 'User not found.']);
         }
-    
+
         // Generate OTP baru
         $otp = rand(100000, 999999);
-    
+
         // Kirim OTP via email
         Mail::send('auth.otp-email', ['otp' => $otp], function ($message) use ($user) {
             $message->to($user->email)
-                    ->subject('Your New OTP Code');
+                ->subject('Your New OTP Code');
         });
-    
+
         // Simpan OTP dan waktu pembuatan ke session
         session([
             'otp' => $otp,
             'otp_generated_at' => time(),
         ]);
-    
+
         return back()->with('status', 'A new OTP has been sent to your email.');
     }
-    
+
     public function showLoginForm()
     {
         return view('Auth.login');
@@ -149,6 +149,8 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
+        $remember = $request->has('remember');
+
 
         if (Auth::attempt($credentials)) {
             return redirect('/');
@@ -275,15 +277,15 @@ class AuthController extends Controller
             'current_email' => 'required|email',
             'new_email' => 'required|email|unique:users,email',
         ]);
-    
+
         $user = Auth::user();
-    
+
         if ($request->current_email !== $user->email) {
             return back()->withErrors(['current_email' => 'Current email does not match.']);
         }
-    
+
         $otp = rand(100000, 999999);
-    
+
         // Simpan data sementara di session
         session([
             'otp' => $otp,
@@ -291,13 +293,13 @@ class AuthController extends Controller
             'otp_email' => $request->new_email,
             'email_change_user_id' => $user->id, // untuk memastikan hanya dia yang bisa ganti
         ]);
-    
+
         // Kirim OTP ke email baru
         Mail::send('auth.otp-email', ['otp' => $otp], function ($message) use ($request) {
             $message->to($request->new_email)
                 ->subject('Your OTP Code for Email Change');
         });
-    
+
         return redirect()->route('auth.verifyOtp')->with('status', 'OTP sent to your new email address.');
-    }    
+    }
 }
